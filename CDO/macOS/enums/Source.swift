@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Foundation
 
 enum Source: String, CaseIterable {
     case main = "Main"
@@ -46,14 +45,22 @@ enum MainSource: String, CaseIterable {
 
     private var symbolName: String {
         switch self {
-        case .remindersList: "figure.open.water.swim.circle"
-        case .clientList: "figure.open.water.swim.circle"
-        case .employerList: "figure.open.water.swim.circle"
+        case .remindersList: "\(calendarDate())calendar"
+        case .clientList: "person"
+        case .employerList: "list.bullet.clipboard"
         }
     }
 
     var image: NSImage? {
         .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    }
+
+    func calendarDate() -> String {
+        let date = Calendar.current
+        let components = date.dateComponents([.day], from: .now)
+        guard let day = components.day else { return "" }
+        return String(day) + "."
+
     }
 }
 
@@ -66,7 +73,7 @@ enum AdministrativeSource: String, CaseIterable {
 
     private var symbolName: String {
         switch self {
-        case .clientDatabase: "figure.open.water.swim.circle"
+        case .clientDatabase: "info.circle.text.page"
         }
     }
 

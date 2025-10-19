@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Calendar: Codable {
+struct Remnder: Codable {
     let id: Int
     let actionDate: Date?
     let clientID: Int?

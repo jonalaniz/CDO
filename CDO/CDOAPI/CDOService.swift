@@ -17,7 +17,7 @@ final class CDOService {
     // TODO: Build out a way to input the address and remove this
     let baseURLString = "http://127.0.0.1:8080"
 
-    func fetchCalendars() async throws -> [Calendar] {
+    func fetchCalendars() async throws -> [Remnder] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.calendars.path)!
 
         return try await apiManager.request(

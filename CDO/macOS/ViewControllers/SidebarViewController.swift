@@ -52,7 +52,7 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
 
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
         switch item {
-        case is Source.MainSource, is Source.AdministrativeSource:
+        case is MainSource, is AdministrativeSource:
             return true
         default:
             return false
@@ -67,15 +67,15 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
 
         switch item {
         case let item as Source:
-            text = item.text
+            text = item.rawValue
             identifier = item.identifier
             image = item.image
-        case let item as Source.MainSource:
-            text = item.text
+        case let item as MainSource:
+            text = item.rawValue
             identifier = item.identifier
             image = item.image
-        case let item as Source.AdministrativeSource:
-            text = item.text
+        case let item as AdministrativeSource:
+            text = item.rawValue
             identifier = item.identifier
             image = item.image
         default: return nil

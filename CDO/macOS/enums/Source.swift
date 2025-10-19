@@ -8,9 +8,9 @@
 import AppKit
 import Foundation
 
-enum Source: CaseIterable {
-    case main
-    case administrative
+enum Source: String, CaseIterable {
+    case main = "Main"
+    case administrative = "Administrative"
 
     var identifier: NSUserInterfaceItemIdentifier {
         return NSUserInterfaceItemIdentifier("HeaderCell")
@@ -20,13 +20,6 @@ enum Source: CaseIterable {
         switch self {
         case .main: MainSource.allCases
         case .administrative: AdministrativeSource.allCases
-        }
-    }
-
-    var text: String {
-        switch self {
-        case .main: return "Main"
-        case .administrative: return "Administrative"
         }
     }
 
@@ -40,58 +33,44 @@ enum Source: CaseIterable {
     var image: NSImage? {
         .init(systemSymbolName: symbolName, accessibilityDescription: "")
     }
+}
 
-    enum MainSource: CaseIterable {
-        case remindersList
-        case clientList
-        case employerList
+enum MainSource: String, CaseIterable {
+    case remindersList = "Reminders"
+    case clientList = "Clients"
+    case employerList = "Employers"
 
-        var identifier: NSUserInterfaceItemIdentifier {
-            return NSUserInterfaceItemIdentifier("DataCell")
-        }
+    var identifier: NSUserInterfaceItemIdentifier {
+        return NSUserInterfaceItemIdentifier("DataCell")
+    }
 
-        var text: String {
-            switch self {
-            case .remindersList: return "Reminders"
-            case .clientList: return "Clients"
-            case .employerList: return "Employers"
-            }
-        }
-
-        private var symbolName: String {
-            switch self {
-            case .remindersList: "figure.open.water.swim.circle"
-            case .clientList: "figure.open.water.swim.circle"
-            case .employerList: "figure.open.water.swim.circle"
-            }
-        }
-
-        var image: NSImage? {
-            .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    private var symbolName: String {
+        switch self {
+        case .remindersList: "figure.open.water.swim.circle"
+        case .clientList: "figure.open.water.swim.circle"
+        case .employerList: "figure.open.water.swim.circle"
         }
     }
 
-    enum AdministrativeSource: CaseIterable {
-        case clientDatabase
+    var image: NSImage? {
+        .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    }
+}
 
-        var identifier: NSUserInterfaceItemIdentifier {
-            return NSUserInterfaceItemIdentifier("DataCell")
-        }
+enum AdministrativeSource: String, CaseIterable {
+    case clientDatabase = "Client Database"
 
-        var text: String {
-            switch self {
-            case .clientDatabase: return "Client Database"
-            }
-        }
+    var identifier: NSUserInterfaceItemIdentifier {
+        return NSUserInterfaceItemIdentifier("DataCell")
+    }
 
-        private var symbolName: String {
-            switch self {
-            case .clientDatabase: "figure.open.water.swim.circle"
-            }
+    private var symbolName: String {
+        switch self {
+        case .clientDatabase: "figure.open.water.swim.circle"
         }
+    }
 
-        var image: NSImage? {
-            .init(systemSymbolName: symbolName, accessibilityDescription: "")
-        }
+    var image: NSImage? {
+        .init(systemSymbolName: symbolName, accessibilityDescription: "")
     }
 }

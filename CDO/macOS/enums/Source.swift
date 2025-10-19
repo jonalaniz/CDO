@@ -66,6 +66,10 @@ enum MainSource: String, CaseIterable {
 
 enum AdministrativeSource: String, CaseIterable {
     case clientDatabase = "Client Database"
+    case counselorDatabase = "Counselor Database"
+    case employerDatabase = "Employer Database"
+    case referralDatabase = "Referral Database"
+    case poDatabase = "PO Database"
 
     var identifier: NSUserInterfaceItemIdentifier {
         return NSUserInterfaceItemIdentifier("DataCell")
@@ -74,6 +78,10 @@ enum AdministrativeSource: String, CaseIterable {
     private var symbolName: String {
         switch self {
         case .clientDatabase: "info.circle.text.page"
+        case .counselorDatabase: "person.line.dotted.person"
+        case .employerDatabase: "storefront"
+        case .referralDatabase: "briefcase"
+        case .poDatabase: "scroll"
         }
     }
 

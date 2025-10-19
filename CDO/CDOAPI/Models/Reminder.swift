@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Remnder: Codable {
+struct Reminder: Codable {
     let id: Int
     let actionDate: Date?
     let clientID: Int?

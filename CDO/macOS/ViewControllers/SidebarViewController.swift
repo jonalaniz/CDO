@@ -15,24 +15,31 @@ class SidebarViewController: NSViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         outlineView.expandItem(nil, expandChildren: true)
-        // Do view setup here.
     }
 }
 
 extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
-    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let item = outlineView.item(atRow: outlineView.selectedRow) else { return }
+        switch item {
+        case let item as MainSource:
+            print(item.rawValue)
+        case let item as AdministrativeSource:
+            print(item.rawValue)
+        default: return
+        }
+    }
 
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         // Root (item == nil), return the number of source types (2)
         guard let source = item as? Source
         else { return Source.allCases.count }
 
         // Cast as a source, return the number of children
-        print(source.children.count)
         return source.children.count
     }
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-
         // Root (item == nil), return the specfic source at the index
         guard let source = item as? Source
         else { return Source.allCases[index] }
@@ -51,16 +58,11 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     }
 
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        switch item {
-        case is MainSource, is AdministrativeSource:
-            return true
-        default:
-            return false
-        }
+        guard item is Source else { return true }
+        return false
     }
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-
         var text: String
         var image: NSImage?
         var identifier: NSUserInterfaceItemIdentifier

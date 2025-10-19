@@ -30,6 +30,17 @@ enum Source: CaseIterable {
         }
     }
 
+    private var symbolName: String {
+        switch self {
+        case .main: "figure.open.water.swim.circle"
+        case .administrative: "figure.open.water.swim.circle"
+        }
+    }
+
+    var image: NSImage? {
+        .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    }
+
     enum MainSource: CaseIterable {
         case remindersList
         case clientList
@@ -46,6 +57,18 @@ enum Source: CaseIterable {
             case .employerList: return "Employers"
             }
         }
+
+        private var symbolName: String {
+            switch self {
+            case .remindersList: "figure.open.water.swim.circle"
+            case .clientList: "figure.open.water.swim.circle"
+            case .employerList: "figure.open.water.swim.circle"
+            }
+        }
+
+        var image: NSImage? {
+            .init(systemSymbolName: symbolName, accessibilityDescription: "")
+        }
     }
 
     enum AdministrativeSource: CaseIterable {
@@ -59,6 +82,16 @@ enum Source: CaseIterable {
             switch self {
             case .clientDatabase: return "Client Database"
             }
+        }
+
+        private var symbolName: String {
+            switch self {
+            case .clientDatabase: "figure.open.water.swim.circle"
+            }
+        }
+
+        var image: NSImage? {
+            .init(systemSymbolName: symbolName, accessibilityDescription: "")
         }
     }
 }

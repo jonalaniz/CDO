@@ -62,18 +62,22 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
 
         var text: String
+        var image: NSImage?
         var identifier: NSUserInterfaceItemIdentifier
 
         switch item {
         case let item as Source:
             text = item.text
             identifier = item.identifier
+            image = item.image
         case let item as Source.MainSource:
             text = item.text
             identifier = item.identifier
+            image = item.image
         case let item as Source.AdministrativeSource:
             text = item.text
             identifier = item.identifier
+            image = item.image
         default: return nil
         }
 
@@ -81,6 +85,7 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
         else { return nil }
 
         view.textField?.stringValue = text
+        view.imageView?.image = image
 
         return view
     }

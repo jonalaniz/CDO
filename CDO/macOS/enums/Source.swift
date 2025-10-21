@@ -7,85 +7,72 @@
 
 import AppKit
 
-enum Source: String, CaseIterable {
+enum SourceItem: String, CaseIterable {
+    // Headers
     case main = "Main"
     case administrative = "Administrative"
 
-    var identifier: NSUserInterfaceItemIdentifier {
-        return NSUserInterfaceItemIdentifier("HeaderCell")
-    }
+    // Main Sources
+    case reminders = "Reminders"
+    case clients = "Clients"
+    case employers = "Employers"
 
-    var children: [Any] {
-        switch self {
-        case .main: MainSource.allCases
-        case .administrative: AdministrativeSource.allCases
-        }
-    }
-
-    private var symbolName: String {
-        switch self {
-        case .main: "figure.open.water.swim.circle"
-        case .administrative: "figure.open.water.swim.circle"
-        }
-    }
-
-    var image: NSImage? {
-        .init(systemSymbolName: symbolName, accessibilityDescription: "")
-    }
-}
-
-enum MainSource: String, CaseIterable {
-    case remindersList = "Reminders"
-    case clientList = "Clients"
-    case employerList = "Employers"
-
-    var identifier: NSUserInterfaceItemIdentifier {
-        return NSUserInterfaceItemIdentifier("DataCell")
-    }
-
-    private var symbolName: String {
-        switch self {
-        case .remindersList: "\(calendarDate())calendar"
-        case .clientList: "person"
-        case .employerList: "list.bullet.clipboard"
-        }
-    }
-
-    var image: NSImage? {
-        .init(systemSymbolName: symbolName, accessibilityDescription: "")
-    }
-
-    func calendarDate() -> String {
-        let date = Calendar.current
-        let components = date.dateComponents([.day], from: .now)
-        guard let day = components.day else { return "" }
-        return String(day) + "."
-
-    }
-}
-
-enum AdministrativeSource: String, CaseIterable {
+    // Administrative Sources
     case clientDatabase = "Client Database"
     case counselorDatabase = "Counselor Database"
     case employerDatabase = "Employer Database"
     case referralDatabase = "Referral Database"
     case poDatabase = "PO Database"
 
-    var identifier: NSUserInterfaceItemIdentifier {
-        return NSUserInterfaceItemIdentifier("DataCell")
+    static var rootItems: [SourceItem] = [.main, .administrative]
+
+    var parent: SourceItem? {
+        switch self {
+        case .reminders, .clients, .employers:
+            return .main
+        case .clientDatabase, .counselorDatabase, .employerDatabase, .referralDatabase, .poDatabase:
+            return .administrative
+        default: return nil
+        }
     }
 
-    private var symbolName: String {
+    var children: [SourceItem] {
         switch self {
+        case .main, .administrative: return SourceItem.allCases.filter { $0.parent == self }
+        default: return []
+        }
+    }
+
+    var isHeader: Bool {
+        return !children.isEmpty
+    }
+
+    var identifier: NSUserInterfaceItemIdentifier {
+        return .init(isHeader ? "HeaderCell" : "DataCell")
+    }
+
+    var image: NSImage? {
+        guard let symbolName = symbolName else { return nil }
+        return .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    }
+
+    private var symbolName: String? {
+        switch self {
+        case .reminders: "\(currentDate())calendar"
+        case .clients: "person"
+        case .employers: "list.bullet.clipboard"
         case .clientDatabase: "info.circle.text.page"
         case .counselorDatabase: "person.line.dotted.person"
         case .employerDatabase: "storefront"
         case .referralDatabase: "briefcase"
         case .poDatabase: "scroll"
+        default: nil
         }
     }
 
-    var image: NSImage? {
-        .init(systemSymbolName: symbolName, accessibilityDescription: "")
+    private func currentDate() -> String {
+        let components = Calendar.current.dateComponents([.day], from: .now)
+        guard let day = components.day else { return "" }
+        return String(day) + "."
     }
 }

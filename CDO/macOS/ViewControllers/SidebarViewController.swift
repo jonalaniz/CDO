@@ -7,11 +7,18 @@
 
 import Cocoa
 
-class SidebarViewController: NSViewController {
+protocol SidebarDelegate: NSObject {
+    func selectionMade(_ source: SourceItem)
+}
+
+final class SidebarViewController: NSViewController {
     @IBOutlet weak var outlineView: NSOutlineView!
-    
+
+    weak var delegate: SidebarDelegate?
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = CDOCoordinator.shared
         outlineView.dataSource = self
         outlineView.delegate = self
         outlineView.expandItem(nil, expandChildren: true)
@@ -20,20 +27,17 @@ class SidebarViewController: NSViewController {
 
 extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        guard let item = outlineView.item(atRow: outlineView.selectedRow) else { return }
-        switch item {
-        case let item as MainSource:
-            print(item.rawValue)
-        case let item as AdministrativeSource:
-            print(item.rawValue)
-        default: return
-        }
+        guard let item = outlineView.item(atRow: outlineView.selectedRow) as? SourceItem
+        else { return }
+        delegate?.selectionMade(item)
     }
 
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        // Root (item == nil), return the number of source types (2)
-        guard let source = item as? Source
-        else { return Source.allCases.count }
+        // Root (item == nil), return the number of source types
+        guard let source = item as? SourceItem
+        else {
+            return SourceItem.rootItems.count
+        }
 
         // Cast as a source, return the number of children
         return source.children.count
@@ -41,25 +45,31 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         // Root (item == nil), return the specfic source at the index
-        guard let source = item as? Source
-        else { return Source.allCases[index] }
+        guard let source = item as? SourceItem
+        else {
+            let headers: [SourceItem] = [.main, .administrative]
+            return headers[index]
+        }
 
         // Cast as a source, we return the child at the index
         return source.children[index]
     }
 
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        guard let _ = item as? Source else { return false }
-        return true
+        guard let item = item as? SourceItem else { return false }
+        return !item.children.isEmpty
     }
 
     func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
-        return item is Source
+        guard let item = item as? SourceItem
+        else { return false }
+        return item.isHeader
     }
 
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        guard item is Source else { return true }
-        return false
+        guard let item = item as? SourceItem
+        else { return false }
+        return !item.isHeader
     }
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
@@ -67,20 +77,14 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
         var image: NSImage?
         var identifier: NSUserInterfaceItemIdentifier
 
-        switch item {
-        case let item as Source:
-            text = item.rawValue
-            identifier = item.identifier
-            image = item.image
-        case let item as MainSource:
-            text = item.rawValue
-            identifier = item.identifier
-            image = item.image
-        case let item as AdministrativeSource:
-            text = item.rawValue
-            identifier = item.identifier
-            image = item.image
-        default: return nil
+        guard let item = item as? SourceItem
+        else { return nil }
+
+        text = item.rawValue
+        identifier = item.identifier
+
+        if !item.isHeader {
+            if let symbol = item.image { image = symbol }
         }
 
         guard let view = outlineView.makeView(withIdentifier: identifier, owner: self) as? NSTableCellView

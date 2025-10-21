@@ -5,7 +5,7 @@
 //  Created by Jon Alaniz on 10/20/25.
 //
 
-import Foundation
+import Cocoa
 
 final class CDOCoordinator: NSObject {
     // MARK: - Shared Instance
@@ -15,13 +15,36 @@ final class CDOCoordinator: NSObject {
     // MARK: - Properties
     private let clientManager = ClientManager.shared
     private let remindersManager = RemindersManager.shared
+    private let storyboard = NSStoryboard(name: "Main", bundle: nil)
+
+    var splitViewController: NSSplitViewController?
 
     private override init() {}
 
+    func navigateToViewController(_ source: SourceItem) {
+        guard let splitVC = splitViewController else {
+            return
+        }
+
+        guard let destination = storyboard.instantiateController(
+            withIdentifier: source.rawValue
+        ) as? NSViewController
+        else { return }
+
+        // Remove the current detail item (if any)
+        if splitVC.splitViewItems.count > 1 {
+            let currentDetail = splitVC.splitViewItems[1]
+            splitVC.removeSplitViewItem(currentDetail)
+        }
+
+        // Add the new one
+        let newDetailItem = NSSplitViewItem(viewController: destination)
+        splitVC.addSplitViewItem(newDetailItem)
+    }
 }
 
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
-        print(source)
+        navigateToViewController(source)
     }
 }

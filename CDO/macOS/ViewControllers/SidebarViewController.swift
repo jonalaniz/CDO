@@ -22,6 +22,12 @@ final class SidebarViewController: NSViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         outlineView.expandItem(nil, expandChildren: true)
+        selectDefaultItem()
+    }
+
+    private func selectDefaultItem() {
+        let row = outlineView.row(forItem: SourceItem.reminders)
+        outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
     }
 }
 

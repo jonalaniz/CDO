@@ -8,7 +8,7 @@
 import Foundation
 
 struct ClientSummary: Codable {
-    let id: Int?
+    let id: Int
     let firstName: String
     let lastName: String
     let address1: String?
@@ -19,7 +19,7 @@ struct ClientSummary: Codable {
 }
 
 struct Client: Codable {
-    let id: Int?
+    let id: Int
     let startDate: Date?
     let ssn: String?
     let firstName: String

@@ -16,6 +16,7 @@ final class ClientManager: NSObject {
     private let service = CDOService.shared
     var clients = [ClientSummary]()
     weak var delegate: DataManagerDelegate?
+    private var sortedByColumn: Column?
 
     private override init() {}
 
@@ -23,6 +24,7 @@ final class ClientManager: NSObject {
         Task {
             do {
                 clients = try await service.fetchClients()
+                    .sorted { $0.id < $1.id }
                 updateDelegate()
             } catch {
                 print(error)
@@ -37,7 +39,7 @@ final class ClientManager: NSObject {
 }
 
 extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
-    private enum TableCell: String, CaseIterable {
+    private enum Column: String, CaseIterable {
         case firstName = "FirstNameID"
         case lastName = "LastNameID"
         case address1 = "Address1ID"
@@ -50,7 +52,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
             .init(rawValue)
         }
     }
-    
+
     func numberOfRows(in tableView: NSTableView) -> Int {
         return clients.count
     }
@@ -58,7 +60,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard
             let tableColumn = tableColumn,
-            let column = TableCell(rawValue: tableColumn.identifier.rawValue)
+            let column = Column(rawValue: tableColumn.identifier.rawValue)
         else { return nil }
 
         let client = clients[row]
@@ -81,5 +83,40 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
         }
 
         return cell
+    }
+
+    func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
+        guard let column = Column(rawValue: tableColumn.identifier.rawValue)
+        else { return }
+        sortBy(column)
+    }
+
+    private func sortBy(_ column: Column) {
+        guard column != sortedByColumn else {
+            clients.reverse()
+            return
+        }
+
+        sortedByColumn = column
+
+        switch column {
+        case .firstName: clients.sort {
+            ($0.firstName == $1.firstName) ? $0.lastName < $1.lastName : $0.firstName < $1.firstName
+        }
+        case .lastName: clients.sort {
+            ($0.lastName == $1.lastName) ? $0.firstName < $1.firstName : $0.lastName < $1.lastName
+        }
+        case .address1: return
+        case .address2: return
+        case .city: clients.sort {
+            ($0.city == $1.city) ? $0.lastName < $1.lastName : $0.city < $0.city
+        }
+        case .state: clients.sort {
+            ($0.state < $1.state) ? $0.lastName < $1.lastName : $0.state < $1.state
+        }
+        case .zip: return
+        }
+
+        updateDelegate()
     }
 }

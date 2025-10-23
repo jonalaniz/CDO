@@ -9,6 +9,7 @@ import AppKit
 
 protocol DataManagerDelegate: AnyObject {
     func didUpdateClients()
+    func didSelect()
 }
 
 final class ClientManager: NSObject {
@@ -28,6 +29,15 @@ final class ClientManager: NSObject {
                 updateDelegate()
             } catch {
                 print(error)
+            }
+        }
+    }
+
+    func fetchClient(id: Int) {
+        Task {
+            do {
+                let client = try await service.fetchClient(id: id)
+                ClientAIManager.shared.jobOpportunitiesFor(client)
             }
         }
     }
@@ -118,5 +128,9 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
         }
 
         updateDelegate()
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        delegate?.didSelect()
     }
 }

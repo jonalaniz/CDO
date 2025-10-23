@@ -31,4 +31,8 @@ extension RemindersViewController: DataManagerDelegate {
     func didUpdateClients() {
         tableView.reloadData()
     }
+
+    func didSelect() {
+        // Run selection code here
+    }
 }

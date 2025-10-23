@@ -39,7 +39,7 @@ final class CDOCoordinator: NSObject {
 
         // Add the new one
         let newDetailItem = NSSplitViewItem(viewController: destination)
-        splitVC.addSplitViewItem(newDetailItem)
+        splitVC.insertSplitViewItem(newDetailItem, at: 1)
     }
 }
 

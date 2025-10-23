@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum Benefit: String, Codable {
+    case ssi = "SSI"
+    case ssdi = "SSDI"
+}

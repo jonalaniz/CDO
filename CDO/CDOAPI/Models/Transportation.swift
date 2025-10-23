@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+//enum Transportation: String, Codable {
+//    case ownsVehicle = ""
+//    case bus = ""
+//    case outsideOfBusRoute = ""
+//    case family = ""
+//}

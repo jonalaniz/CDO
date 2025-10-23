@@ -53,8 +53,8 @@ struct Client: Codable {
     let active: Bool?
     let employmentGoal: String?
     let employerID: Int?
-    let tier: String?
-    let benefits: String?
+    let status: String?
+    let benefits: Benefit?
     let criminalCharge: String?
     let education: String?
     let transportation: String?

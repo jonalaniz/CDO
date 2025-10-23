@@ -31,4 +31,9 @@ extension ClientViewController: DataManagerDelegate {
     func didUpdateClients() {
         tableView.reloadData()
     }
+
+    func didSelect() {
+        let clientID = manager.clients[tableView.selectedRow].id
+        manager.fetchClient(id: clientID)
+    }
 }

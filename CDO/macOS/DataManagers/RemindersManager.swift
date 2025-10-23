@@ -41,7 +41,6 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
         case clentName = "ClientNameID"
         case actionDate = "ActionDateID"
         case description = "DescriptionID"
-        case completed = "CompletedID"
 
         var identifier: NSUserInterfaceItemIdentifier {
             .init(rawValue)
@@ -71,22 +70,15 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
         case .clentName: 
             view.textField?.stringValue = reminder.clientName ?? ""
         case .actionDate: 
-            view.textField?.stringValue = reminder.actionDate?.formatted() ?? ""
+            view.textField?.stringValue = reminder.actionDate?.formatted(date: .numeric, time: .omitted) ?? ""
         case .description: 
             view.textField?.stringValue = reminder.description ?? ""
-        case .completed:
-            view.textField?.stringValue = completedStatusString(reminder.complete)
+            view.toolTip = reminder.description ?? ""
         }
+
+        view.layer?.opacity = reminder.complete == true ? 1.0 : 0.5
 
         return view
     }
 
-    private func completedStatusString(_ status: Bool?) -> String {
-        guard
-            let status = status,
-            status != false
-        else { return "❌" }
-
-        return "✅"
-    }
 }

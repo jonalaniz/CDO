@@ -43,6 +43,17 @@ final class CDOService {
         )
     }
 
+    func fetchClient(id: Int) async throws -> Client {
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.client(id).path)!
+
+        return try await apiManager.request(
+            url: urlWithEndpoint,
+            httpMethod: .get,
+            body: nil,
+            headers: nil
+        )
+    }
+
     func fetchCounselors() async throws -> [Counselor] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.counselors.path)!
 

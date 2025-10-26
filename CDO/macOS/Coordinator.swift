@@ -18,6 +18,7 @@ final class CDOCoordinator: NSObject {
     private let storyboard = NSStoryboard(name: "Main", bundle: nil)
 
     var splitViewController: NSSplitViewController?
+    private var windowController: WindowController?
 
     private override init() {}
 
@@ -41,10 +42,15 @@ final class CDOCoordinator: NSObject {
         let newDetailItem = NSSplitViewItem(viewController: destination)
         splitVC.insertSplitViewItem(newDetailItem, at: 1)
     }
+
+    func setWindowController(_ windowController: NSWindowController) {
+        self.windowController = windowController as? WindowController
+    }
 }
 
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
-        navigateToViewController(source)
+        windowController?.moveToNewView(source)
+//        navigateToViewController(source)
     }
 }

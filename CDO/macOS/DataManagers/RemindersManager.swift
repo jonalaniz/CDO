@@ -8,6 +8,7 @@
 import AppKit
 
 final class RemindersManager: NSObject {
+    // MARK: - Singleton
     static let shared = RemindersManager()
     private let service = CDOService.shared
     var reminders = [Reminder]()
@@ -80,5 +81,4 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
 
         return view
     }
-
 }

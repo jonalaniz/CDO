@@ -51,6 +51,10 @@ enum SourceItem: String, CaseIterable {
         return .init(isHeader ? "HeaderCell" : "DataCell")
     }
 
+    var inspectorIdentifier: String {
+        return self.rawValue + ".Inspector"
+    }
+
     var image: NSImage? {
         guard let symbolName = symbolName else { return nil }
         return .init(systemSymbolName: symbolName, accessibilityDescription: "")

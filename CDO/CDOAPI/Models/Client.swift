@@ -22,6 +22,7 @@ struct Client: Codable {
     let id: Int
     let startDate: Date?
     let ssn: String?
+    let caseID: String?
     let firstName: String
     let lastName: String
     let address1: String?

@@ -13,12 +13,18 @@ final class ReminderViewController: NSViewController {
     @IBOutlet weak var datePicker: NSDatePicker!
     @IBOutlet weak var completeButton: NSButton!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    override var representedObject: Any? {
+        didSet {
+            guard let reminder = representedObject as? Reminder else { return }
+            updateUI(with: reminder)
+        }
     }
 
-    func updateUI(with: Reminder) {
+    func updateUI(with reminder: Reminder) {
+        // Select a client based on the date
+        descriptionField.stringValue = reminder.description ?? ""
+        datePicker.dateValue = reminder.actionDate ?? Date()
+        completeButton.title = reminder.complete ? "Uncomplete" : "Complete"
     }
 
     @IBAction func dateChanged(_ sender: Any) {

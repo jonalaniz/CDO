@@ -7,31 +7,31 @@
 
 import AppKit
 
-protocol DataManagerDelegate: AnyObject {
-    func didUpdateClients()
-    func didSelect()
-}
-
-final class ClientManager: NSObject {
+final class ClientManager: BaseDataManager {
     // MARK: - Shared Instance
     static let shared = ClientManager()
     private override init() {}
 
-    // MARK: - Dependencies
-    private let service = CDOService.shared
-
-    // MARK: - Delegate
-    weak var delegate: DataManagerDelegate?
-
     // MARK: - Properties
-    var clients = [ClientSummary]()
+    private var clients = [Client]()
+    var clientSummaries = [ClientSummary]()
     private var sortedByColumn: Column?
 
     // MARK: - Public API
+    func fetchAllClients() {
+        Task {
+            do {
+                clients = try await service.fetchAllClients()
+            } catch {
+                print(error)
+            }
+        }
+    }
+
     func fetchClients() {
         Task {
             do {
-                clients = try await service.fetchClients()
+                clientSummaries = try await service.fetchClientSummaries()
                     .sorted { $0.id < $1.id }
                 updateDelegate()
             } catch {
@@ -44,14 +44,23 @@ final class ClientManager: NSObject {
         Task {
             do {
                 let client = try await service.fetchClient(id: id)
-                ClientAIManager.shared.jobOpportunitiesFor(client)
+                updatedItem(client)
             }
         }
     }
 
     @MainActor
     private func updateDelegate() {
-        delegate?.didUpdateClients()
+        delegate?.didUpdateItems()
+    }
+
+    @MainActor
+    private func updatedItem(_ client: Client) {
+        delegate?.didUpdateItem(client)
+    }
+
+    override func cachedItem(for id: Int) -> Any? {
+        return clients.first(where: { $0.id == id })
     }
 }
 
@@ -71,7 +80,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return clients.count
+        return clientSummaries.count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -80,7 +89,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
             let column = Column(rawValue: tableColumn.identifier.rawValue)
         else { return nil }
 
-        let client = clients[row]
+        let client = clientSummaries[row]
 
         guard let cell = tableView.makeView(
             withIdentifier: column.identifier, owner: self
@@ -108,36 +117,36 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
         sortBy(column)
     }
 
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        delegate?.didSelect()
+    }
+
     private func sortBy(_ column: Column) {
         guard column != sortedByColumn else {
-            clients.reverse()
+            clientSummaries.reverse()
             return
         }
 
         sortedByColumn = column
 
         switch column {
-        case .firstName: clients.sort {
+        case .firstName: clientSummaries.sort {
             ($0.firstName == $1.firstName) ? $0.lastName < $1.lastName : $0.firstName < $1.firstName
         }
-        case .lastName: clients.sort {
+        case .lastName: clientSummaries.sort {
             ($0.lastName == $1.lastName) ? $0.firstName < $1.firstName : $0.lastName < $1.lastName
         }
         case .address1: return
         case .address2: return
-        case .city: clients.sort {
+        case .city: clientSummaries.sort {
             ($0.city == $1.city) ? $0.lastName < $1.lastName : $0.city < $0.city
         }
-        case .state: clients.sort {
+        case .state: clientSummaries.sort {
             ($0.state < $1.state) ? $0.lastName < $1.lastName : $0.state < $1.state
         }
         case .zip: return
         }
 
         updateDelegate()
-    }
-
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        delegate?.didSelect()
     }
 }

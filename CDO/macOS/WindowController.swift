@@ -80,9 +80,19 @@ class WindowController: NSWindowController {
         inspectorItem.maximumThickness = 360
 
         splitVC.insertSplitViewItem(mainItem, at: 1)
-        splitVC.insertSplitViewItem(inspectorItem, at: 2)
+        splitVC.inspectorItem = inspectorItem
+        splitVC.addSplitViewItem(inspectorItem)
 
         setNewItemProviding(for: source)
+    }
+
+    func updateInspectorRepresentedObject(with object: Any) {
+        guard
+            let splitVC = window?.contentViewController as? SplitViewController,
+            let inspector = splitVC.inspectorItem
+        else { return }
+
+        inspector.viewController.representedObject = object
     }
 
     func updateSubtitle(with string: String) {

@@ -12,8 +12,6 @@ struct Reminder: Codable {
     let actionDate: Date?
     let clientID: Int?
     let clientName: String?
-    let employerID: Int?
     let description: String?
-    let status: String?
-    let complete: Bool?
+    let complete: Bool
 }

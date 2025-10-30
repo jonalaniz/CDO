@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class RemindersViewController: NSViewController {
+final class RemindersViewController: BaseContentViewController {
     @IBOutlet weak var tableView: NSTableView!
 
     private let manager = RemindersManager.shared
@@ -19,28 +19,24 @@ class RemindersViewController: NSViewController {
         manager.delegate = self
         manager.fetchReminders()
     }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
-
-    func updateSubtitle() {
-        guard let window = view.window?.windowController as? WindowController
-        else { return }
-        let count = tableView.numberOfRows
-        window.updateSubtitle(with: "\(count) Reminders")
-    }
 }
 
 extension RemindersViewController: DataManagerDelegate {
-    func didUpdateClients() {
+    func didUpdateItem(_ item: Any) {
+        selectedObjectToRepresent(item)
+    }
+
+    func didUpdateItems() {
         tableView.reloadData()
-        updateSubtitle()
+        updateSubtitle(with: "\(tableView.numberOfRows) Reminders")
     }
 
     func didSelect() {
-        // Run selection code here
+        let id = manager.reminders[tableView.selectedRow].id
+        manager.fetchReminder(id: id)
+
+        guard let cachedItem = manager.cachedItem(for: id)
+        else { return }
+        selectedObjectToRepresent(cachedItem)
     }
 }

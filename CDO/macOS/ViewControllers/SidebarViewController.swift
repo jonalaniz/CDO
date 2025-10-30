@@ -7,7 +7,7 @@
 
 import Cocoa
 
-protocol SidebarDelegate: NSObject {
+protocol SidebarDelegate: AnyObject {
     func selectionMade(_ source: SourceItem)
 }
 

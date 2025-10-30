@@ -52,6 +52,5 @@ final class CDOCoordinator: NSObject {
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
         windowController?.moveToNewView(source)
-//        navigateToViewController(source)
     }
 }

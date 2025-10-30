@@ -7,20 +7,18 @@
 
 import AppKit
 
-final class RemindersManager: NSObject {
-    // MARK: - Singleton
+final class RemindersManager: BaseDataManager {
+    // MARK: - Shared Instance
     static let shared = RemindersManager()
-    private let service = CDOService.shared
-    var reminders = [Reminder]()
-    weak var delegate: DataManagerDelegate?
-    private var sortedByColumn: Column?
-
     private override init() {}
+
+    var reminders = [Reminder]()
+    private var sortedByColumn: Column?
 
     func fetchReminders() {
         Task {
             do {
-                reminders = try await service.fetchCalendars(withClients: true)
+                reminders = try await service.fetchReminders(withClients: true)
                     .sorted {
                     $0.id < $1.id
                 }
@@ -31,9 +29,22 @@ final class RemindersManager: NSObject {
         }
     }
 
+    func fetchReminder(id: Int) {
+        Task {
+            do {
+                let reminder = try await service.fetchReminder(with: id)
+                updatedItem(reminder)
+            }
+        }
+    }
+
     @MainActor
     private func updateDelegate() {
-        delegate?.didUpdateClients()
+        delegate?.didUpdateItems()
+    }
+
+    override func cachedItem(for id: Int) -> Any? {
+        return reminders.first(where: { $0.id == id })
     }
 }
 
@@ -50,6 +61,10 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
 
     func numberOfRows(in tableView: NSTableView) -> Int {
         return reminders.count
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        delegate?.didSelect()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -77,7 +92,7 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
             view.toolTip = reminder.description ?? ""
         }
 
-        view.layer?.opacity = reminder.complete == true ? 1.0 : 0.5
+        view.layer?.opacity = reminder.complete ? 0.5 : 1.0
 
         return view
     }

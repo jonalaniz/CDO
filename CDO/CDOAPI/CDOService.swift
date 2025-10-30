@@ -17,7 +17,18 @@ final class CDOService {
     // TODO: Build out a way to input the address and remove this
     let baseURLString = "http://127.0.0.1:8080"
 
-    func fetchCalendars(withClients: Bool = false) async throws -> [Reminder] {
+    func fetchReminder(with id: Int) async throws -> Reminder {
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.calendar(id).path)!
+
+        return try await apiManager.request(
+            url: urlWithEndpoint,
+            httpMethod: .get,
+            body: nil,
+            headers: nil
+        )
+    }
+
+    func fetchReminders(withClients: Bool = false) async throws -> [Reminder] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.calendars.path)!
 
         var components = URLComponents(url: urlWithEndpoint, resolvingAgainstBaseURL: true)
@@ -32,7 +43,18 @@ final class CDOService {
         )
     }
 
-    func fetchClients() async throws -> [ClientSummary] {
+    func fetchAllClients() async throws -> [Client] {
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.allClients.path)!
+
+        return try await apiManager.request(
+            url: urlWithEndpoint,
+            httpMethod: .get,
+            body: nil,
+            headers: nil
+        )
+    }
+
+    func fetchClientSummaries() async throws -> [ClientSummary] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.clients.path)!
 
         return try await apiManager.request(

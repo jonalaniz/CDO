@@ -13,14 +13,21 @@ protocol DataManagerDelegate: AnyObject {
 }
 
 final class ClientManager: NSObject {
+    // MARK: - Shared Instance
     static let shared = ClientManager()
-    private let service = CDOService.shared
-    var clients = [ClientSummary]()
-    weak var delegate: DataManagerDelegate?
-    private var sortedByColumn: Column?
-
     private override init() {}
 
+    // MARK: - Dependencies
+    private let service = CDOService.shared
+
+    // MARK: - Delegate
+    weak var delegate: DataManagerDelegate?
+
+    // MARK: - Properties
+    var clients = [ClientSummary]()
+    private var sortedByColumn: Column?
+
+    // MARK: - Public API
     func fetchClients() {
         Task {
             do {

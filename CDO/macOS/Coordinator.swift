@@ -13,6 +13,7 @@ final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
     // MARK: - Properties
+    private let cacheManager = CacheManager.shared
     private let clientManager = ClientManager.shared
     private let remindersManager = RemindersManager.shared
     private let storyboard = NSStoryboard(name: "Main", bundle: nil)

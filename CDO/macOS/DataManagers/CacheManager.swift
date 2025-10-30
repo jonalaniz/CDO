@@ -9,5 +9,12 @@ import Foundation
 
 class CacheManager {
     static let shared = CacheManager()
-    private init() {}
+
+    // MARK: Dependencies
+    private let clientManager = ClientManager.shared
+
+    private init() {
+        print("CacheManager Initialized")
+        clientManager.fetchClients()
+    }
 }

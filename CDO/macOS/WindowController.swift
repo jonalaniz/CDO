@@ -8,9 +8,7 @@
 import Cocoa
 
 // TODO: The following items need to be set
-// Source changing based on which source was picked
 // Setting the buttons and search to those datamanagers based on source
-// Confrom to protocol
 
 class WindowController: NSWindowController {
     private var addButtomToolbarItem: NSToolbarItem?
@@ -128,7 +126,9 @@ enum ItemCreationControllers {
 
 extension ClientManager: ItemCreationProviding {
     func makeCreationViewController(using storyboard: NSStoryboard) -> NSViewController? {
-        guard let controller = storyboard.instantiateController(withIdentifier: ItemCreationControllers.client.identifier)
+        guard let controller = storyboard.instantiateController(
+            withIdentifier: ItemCreationControllers.client.identifier
+        )
                 as? NSViewController
         else { return nil }
         return controller
@@ -136,7 +136,9 @@ extension ClientManager: ItemCreationProviding {
 }
 
 extension WindowController: NSToolbarDelegate {
-    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+    func toolbar(_ toolbar: NSToolbar,
+                 itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
+                 willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         if itemIdentifier == .newItem {
             let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier)
             toolbarItem.target = self

@@ -7,10 +7,6 @@
 
 import Cocoa
 
-protocol SidebarDelegate: AnyObject {
-    func selectionMade(_ source: SourceItem)
-}
-
 final class SidebarViewController: NSViewController {
     @IBOutlet weak var outlineView: NSOutlineView!
 

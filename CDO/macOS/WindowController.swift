@@ -85,6 +85,10 @@ class WindowController: NSWindowController {
         setNewItemProviding(for: source)
     }
 
+    func updateSubtitle(with string: String) {
+        window?.subtitle = string
+    }
+
     private func setNewItemProviding(for source: SourceItem) {
         switch source {
         case .clients: currentItemCreationprovidingObject =  ClientManager.shared

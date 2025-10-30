@@ -25,11 +25,20 @@ class ClientViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
+
+    // TODO: Make a base ViewController class and have this function be a default
+    func updateSubtitle() {
+        guard let window = view.window?.windowController as? WindowController
+        else { return }
+        let count = tableView.numberOfRows
+        window.updateSubtitle(with: "\(count) Clients")
+    }
 }
 
 extension ClientViewController: DataManagerDelegate {
     func didUpdateClients() {
         tableView.reloadData()
+        updateSubtitle()
     }
 
     func didSelect() {

@@ -12,7 +12,12 @@ final class RemindersManager: BaseDataManager {
     static let shared = RemindersManager()
     private override init() {}
 
-    var reminders = [Reminder]()
+    var isFiltered = false
+    private var reminders = [Reminder]()
+    private var filteredReminders: [Reminder] {
+        reminders.filter { !$0.complete }
+    }
+
     private var sortedByColumn: Column?
 
     func fetchReminders() {
@@ -38,6 +43,10 @@ final class RemindersManager: BaseDataManager {
         }
     }
 
+    func idForSelectedRow(_ row: Int) -> Int {
+        isFiltered ? filteredReminders[row].id : reminders[row].id
+    }
+
     @MainActor
     private func updateDelegate() {
         delegate?.didUpdateItems()
@@ -47,6 +56,17 @@ final class RemindersManager: BaseDataManager {
         return reminders.first(where: { $0.id == id })
     }
 }
+
+// MARK: - Filterable
+
+extension RemindersManager: Filterable {
+    func toggleFilter() {
+        isFiltered = !isFiltered
+        updateDelegate()
+    }
+}
+
+// MARK: - NSTableViewDelegate & NSTableViewDataSource
 
 extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
     private enum Column: String, CaseIterable {
@@ -60,7 +80,7 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return reminders.count
+        isFiltered ? filteredReminders.count : reminders.count
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
@@ -73,7 +93,7 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
             let column = Column(rawValue: tableColumn.identifier.rawValue)
         else { return nil }
 
-        let reminder = reminders[row]
+        let reminder = isFiltered ? filteredReminders[row] : reminders[row]
 
         guard let view = tableView.makeView(
             withIdentifier: column.identifier, owner: self

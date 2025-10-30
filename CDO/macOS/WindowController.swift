@@ -14,6 +14,7 @@ class WindowController: NSWindowController {
     private var addButtomToolbarItem: NSToolbarItem?
     private var currentSource: SourceItem?
     private var currentItemCreationprovidingObject: ItemCreationProviding?
+    private var filterableDataManager: Filterable?
 
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -35,6 +36,9 @@ class WindowController: NSWindowController {
 
     private func configureToolbar() {
         guard let window = window else { return }
+
+        // By default, this is the first view.
+        filterableDataManager = RemindersManager.shared
 
         let newToolbar = NSToolbar(identifier: NSToolbar.Identifier.mainWindowToolbarIdentifier)
         newToolbar.delegate = self
@@ -81,7 +85,7 @@ class WindowController: NSWindowController {
         splitVC.inspectorItem = inspectorItem
         splitVC.addSplitViewItem(inspectorItem)
 
-        setNewItemProviding(for: source)
+        configureCapabilities(for: source)
     }
 
     func updateInspectorRepresentedObject(with object: Any) {
@@ -97,11 +101,42 @@ class WindowController: NSWindowController {
         window?.subtitle = string
     }
 
-    private func setNewItemProviding(for source: SourceItem) {
+    private func configureCapabilities(for source: SourceItem) {
         switch source {
-        case .clients: currentItemCreationprovidingObject =  ClientManager.shared
+        case .clients:
+            filterableDataManager = nil
+            currentItemCreationprovidingObject =  ClientManager.shared
+        case .reminders:
+            filterableDataManager = RemindersManager.shared
+            currentItemCreationprovidingObject = nil
+            // Set the filtered button in the toolbar
         default: return
         }
+
+        configureFilterButton()
+    }
+
+    private func configureFilterButton() {
+        guard
+            let toolbar = window?.toolbar,
+            let filterButton = toolbar.items.first(where: { $0.itemIdentifier == .filterItem })
+        else { return }
+
+        guard let filterableDataManager = filterableDataManager else {
+            filterButton.isHidden = true
+            return
+        }
+
+        let isFiltered = filterableDataManager.isFiltered
+
+        filterButton.isHidden = false
+        filterButton.image = isFiltered
+        ? NSImage(systemSymbolName: "line.3.horizontal.decrease.circle.fill", accessibilityDescription: "")
+        : NSImage(systemSymbolName: "line.3.horizontal.decrease.circle", accessibilityDescription: "")
+        filterButton.toolTip = isFiltered
+        ? "Show all"
+        : "Show only completed items"
+
     }
 
     @objc private func newItemClicked(_ sender: NSToolbarItem) {
@@ -111,6 +146,11 @@ class WindowController: NSWindowController {
         else { return }
 
         window?.contentViewController?.presentAsSheet(popupController)
+    }
+
+    @objc private func filterButtonClicked(_ sender: NSToolbarItem) {
+        filterableDataManager?.toggleFilter()
+        configureFilterButton()
     }
 }
 
@@ -151,15 +191,27 @@ extension WindowController: NSToolbarDelegate {
             return toolbarItem
         }
 
+        if itemIdentifier == .filterItem {
+            let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier)
+            toolbarItem.target = self
+            toolbarItem.action = #selector(filterButtonClicked)
+            toolbarItem.label = "Filter"
+            toolbarItem.toolTip = "Show only completed items"
+            toolbarItem.isBordered = true
+            toolbarItem.image = NSImage(systemSymbolName: "line.3.horizontal.decrease.circle", accessibilityDescription: "")
+            addButtomToolbarItem = toolbarItem
+            return toolbarItem
+        }
+
         return nil
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return [
             .flexibleSpace,
+            .filterItem,
             .newItem,
             .inspectorTrackingSeparator,
-            .flexibleSpace,
             .toggleInspector
         ]
     }
@@ -167,6 +219,7 @@ extension WindowController: NSToolbarDelegate {
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return [
             .flexibleSpace,
+            .filterItem,
             .newItem,
             .inspectorTrackingSeparator,
             .toggleInspector
@@ -180,4 +233,5 @@ extension NSToolbar.Identifier {
 
 extension NSToolbarItem.Identifier {
     static let newItem = NSToolbarItem.Identifier("NewItem")
+    static let filterItem = NSToolbarItem.Identifier("FilterItem")
 }

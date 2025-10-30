@@ -32,7 +32,7 @@ extension RemindersViewController: DataManagerDelegate {
     }
 
     func didSelect() {
-        let id = manager.reminders[tableView.selectedRow].id
+        let id = manager.idForSelectedRow(tableView.selectedRow)
         manager.fetchReminder(id: id)
 
         guard let cachedItem = manager.cachedItem(for: id)

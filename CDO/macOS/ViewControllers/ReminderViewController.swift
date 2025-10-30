@@ -19,7 +19,6 @@ final class ReminderViewController: NSViewController {
     }
 
     func updateUI(with: Reminder) {
-        
     }
 
     @IBAction func dateChanged(_ sender: Any) {

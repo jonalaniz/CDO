@@ -15,6 +15,7 @@ import Cocoa
 class WindowController: NSWindowController {
     private var addButtomToolbarItem: NSToolbarItem?
     private var currentSource: SourceItem?
+    private var currentItemCreationprovidingObject: ItemCreationProviding?
 
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -47,7 +48,6 @@ class WindowController: NSWindowController {
         window.toolbar?.validateVisibleItems()
         window.titlebarSeparatorStyle = .line
 
-
         // Create the search bar
 
     }
@@ -70,10 +70,8 @@ class WindowController: NSWindowController {
         else { return }
 
         // Remove split view items that are not sidebar
-        for splitViewItem in splitVC.splitViewItems {
-            if splitViewItem != splitVC.sidebarItem {
-                splitVC.removeSplitViewItem(splitViewItem)
-            }
+        for splitViewItem in splitVC.splitViewItems where splitViewItem != splitVC.sidebarItem {
+            splitVC.removeSplitViewItem(splitViewItem)
         }
 
         let mainItem = NSSplitViewItem(viewController: controller)
@@ -84,13 +82,42 @@ class WindowController: NSWindowController {
         splitVC.insertSplitViewItem(mainItem, at: 1)
         splitVC.insertSplitViewItem(inspectorItem, at: 2)
 
-        // We need to assign the proper dataManager based on the source item
-        // the dataManager will be set to that protocol so newITemClicked can call protocol.newItem
+        setNewItemProviding(for: source)
+    }
+
+    private func setNewItemProviding(for source: SourceItem) {
+        switch source {
+        case .clients: currentItemCreationprovidingObject =  ClientManager.shared
+        default: return
+        }
     }
 
     @objc private func newItemClicked(_ sender: NSToolbarItem) {
-        print("New Item Picked")
-        // This needs to point to our protocol.newItem()
+        guard
+            let storyboard = storyboard,
+            let popupController = currentItemCreationprovidingObject?.makeCreationViewController(using: storyboard)
+        else { return }
+
+        window?.contentViewController?.presentAsSheet(popupController)
+    }
+}
+
+enum ItemCreationControllers {
+    case client
+
+    var identifier: NSStoryboard.SceneIdentifier {
+        switch self {
+        case .client: NSStoryboard.SceneIdentifier("NewClient")
+        }
+    }
+}
+
+extension ClientManager: ItemCreationProviding {
+    func makeCreationViewController(using storyboard: NSStoryboard) -> NSViewController? {
+        guard let controller = storyboard.instantiateController(withIdentifier: ItemCreationControllers.client.identifier)
+                as? NSViewController
+        else { return nil }
+        return controller
     }
 }
 

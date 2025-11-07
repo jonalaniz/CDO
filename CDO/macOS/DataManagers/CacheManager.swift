@@ -7,23 +7,35 @@
 
 import Foundation
 
-class CacheManager {
-    // Potentially have either the cache manager
-    // or the associated dataManager hold specific
-    // clients/reminders/etc.
+class StatesManager: BaseDataManager {
+    // MARK: - Shared Instance
+    static let shared = StatesManager()
 
-    // Fetch should fetch the basic data that is needed, not
-    // specific objects.
-    static let shared = CacheManager()
+    // MARK: - Properties
+    private var states = [State]()
 
-    // MARK: Dependencies
-    private let clientManager = ClientManager.shared
-    private let remindersManager = RemindersManager.shared
+    func initialize() async {
+        guard let cached: [State] = CacheManager.shared.load(forKey: .states)
+        else { return }
+        print(cached)
+        states = cached
+    }
 
-    private init() {
-        print("CacheManager Initialized")
-        clientManager.fetchAllClients()
-        clientManager.fetchClients()
-        remindersManager.fetchReminders()
+    private func save() {
+        CacheManager.shared.save(states, forKey: .states)
+    }
+
+    func fetchStates() {
+        Task {
+            do {
+                let fetchedStates = try await service.fetchStates()
+                guard fetchedStates != states else { return }
+                states = fetchedStates
+                print(states)
+                save()
+            } catch {
+                print(error.description)
+            }
+        }
     }
 }

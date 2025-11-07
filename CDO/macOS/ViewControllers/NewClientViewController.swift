@@ -102,4 +102,5 @@ class NewClientViewController: NSViewController {
 }
 
 final class NewClientFactory {
+    
 }

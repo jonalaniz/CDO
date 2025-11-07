@@ -17,7 +17,7 @@ class ClientsViewController: BaseContentViewController {
         tableView.dataSource = manager
         tableView.delegate = manager
         manager.delegate = self
-        manager.fetchClients()
+        manager.fetchClientSummaries()
     }
 }
 

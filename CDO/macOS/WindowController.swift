@@ -21,7 +21,6 @@ class WindowController: NSWindowController {
         CDOCoordinator.shared.setWindowController(self)
         configureWindow()
         configureToolbar()
-        updateSubtitle()
     }
 
     private func configureWindow() {
@@ -54,10 +53,6 @@ class WindowController: NSWindowController {
 
     }
 
-    private func updateSubtitle() {
-        // here we will update based on our subtitle
-    }
-
     func moveToNewView(_ source: SourceItem) {
         guard currentSource != source else { return }
         guard let splitVC = window?.contentViewController as? SplitViewController else {
@@ -80,6 +75,8 @@ class WindowController: NSWindowController {
         let inspectorItem = NSSplitViewItem(inspectorWithViewController: inspector)
         inspectorItem.minimumThickness = 300
         inspectorItem.maximumThickness = 360
+
+        splitVC.contentItem = mainItem
 
         splitVC.insertSplitViewItem(mainItem, at: 1)
         splitVC.inspectorItem = inspectorItem

@@ -21,7 +21,6 @@ class BaseDataManager: NSObject {
 
     @MainActor
     func updatedItem(_ item: Any) {
-        print("kkkalled")
         delegate?.didUpdateItem(item)
     }
 }

@@ -8,23 +8,25 @@
 import Foundation
 
 enum Endpoint {
-    case allClients
+    case clients
     case calendar(Int)
     case calendars
     case client(Int)
-    case clients
+    case clientSummaries
     case counselors
     case employers
+    case states
 
     var path: String {
         switch self {
-        case .allClients: return "/api/clients/all"
+        case .clients: return "/api/clients/"
         case .calendar(let id): return "/api/calendars/\(id)"
-        case .calendars: return "/api/calendars"
+        case .calendars: return "/api/reminders"
         case .client(let id): return "/api/clients/\(id)"
-        case .clients: return "/api/clients"
+        case .clientSummaries: return "/api/clients/summaries"
         case .counselors: return "/api/counselors"
         case .employers: return "/api/employers"
+        case .states: return "/api/states"
         }
     }
 }

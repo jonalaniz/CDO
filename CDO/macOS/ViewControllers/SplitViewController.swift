@@ -16,7 +16,6 @@ final class SplitViewController: NSSplitViewController {
         super.viewDidLoad()
         CDOCoordinator.shared.splitViewController = self
         initializeSplitViews()
-        setInspectorWidth()
     }
 
     // MARK: - Setup
@@ -29,12 +28,14 @@ final class SplitViewController: NSSplitViewController {
         inspectorItem = splitViewItems[2]
     }
 
-    private func setInspectorWidth() {
-        guard let inspector = inspectorItem else { return }
-        // Configure inspector so it’s resizable and not too narrow
-//        inspector.minimumThickness = 400
-//        inspector.maximumThickness = 500
-//        inspector.holdingPriority = .defaultLow // enables flexible resizing
-//        inspector.canCollapse = true
+    // TODO: Implement this
+    func updateItems(contentItem: NSSplitViewItem, inspectorItem: NSSplitViewItem) {
+        for splitViewItem in splitViewItems where splitViewItem != sidebarItem {
+            removeSplitViewItem(splitViewItem)
+        }
+        self.contentItem = contentItem
+        self.inspectorItem = inspectorItem
+        addSplitViewItem(contentItem)
+        addSplitViewItem(inspectorItem)
     }
 }

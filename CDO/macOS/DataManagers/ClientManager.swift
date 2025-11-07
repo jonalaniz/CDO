@@ -18,7 +18,7 @@ final class ClientManager: BaseDataManager {
     private var sortedByColumn: Column?
 
     // MARK: - Public API
-    func fetchAllClients() {
+    func fetchAllClientData() {
         Task {
             do {
                 clients = try await service.fetchAllClients()
@@ -28,7 +28,7 @@ final class ClientManager: BaseDataManager {
         }
     }
 
-    func fetchClients() {
+    func fetchClientSummaries() {
         Task {
             do {
                 clientSummaries = try await service.fetchClientSummaries()

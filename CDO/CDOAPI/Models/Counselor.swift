@@ -7,13 +7,15 @@
 
 import Foundation
 
+// TODO: Add DTOs
+
 struct Counselor: Codable {
     let id: Int
     let name: String
-    let counselorEmail: String?
-    let counselorPhone: String?
-    let counselorFax: String?
-    let counselorNotes: String?
+    let email: String?
+    let phone: String?
+    let fax: String?
+    let notes: String?
     let secretaryName: String?
     let secretaryEmail: String?
 }

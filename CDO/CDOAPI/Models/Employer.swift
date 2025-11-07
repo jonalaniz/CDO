@@ -15,4 +15,12 @@ struct Employer: Codable {
     let city: String?
     let state: String?
     let zip: String?
+    let phone: String?
+    let fax: String?
+    let email: String?
+    let website: String?
+    let notes: String?
+    let supervisor: String?
+    let supervisorPhone: String?
+    let supervisorEmail: String?
 }

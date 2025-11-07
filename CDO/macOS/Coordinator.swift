@@ -23,6 +23,10 @@ final class CDOCoordinator: NSObject {
 
     private override init() {}
 
+    func start() {
+        cacheManager.initialize()
+    }
+
     func navigateToViewController(_ source: SourceItem) {
         guard let splitVC = splitViewController else {
             return

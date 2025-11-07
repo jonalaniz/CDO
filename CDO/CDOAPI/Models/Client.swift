@@ -19,12 +19,20 @@ struct ClientSummary: Codable {
 }
 
 struct Client: Codable {
+    // MARK: - Required Fields
+
     let id: Int
+    let firstName: String
+    let lastName: String
+    let counselor: String
+
+    // MARK: - Optional Child Fields
+    let reminders: [Reminder]
+
+    // MARK: - Optional Fields
     let startDate: Date?
     let ssn: String?
     let caseID: String?
-    let firstName: String
-    let lastName: String
     let address1: String?
     let address2: String?
     let city: String
@@ -44,7 +52,6 @@ struct Client: Codable {
     let email2Identity: String?
     let disability: String
     let counselorID: Int?
-    let counselor: String
     let counselorEmail: String?
     let counselorPhone: String?
     let counselorFax: String?
@@ -59,14 +66,14 @@ struct Client: Codable {
     let criminalCharge: String?
     let education: String?
     let transportation: String?
-    let checklistResumeRequred: Bool?
-    let checklistResumeCompleted: Bool?
-    let checklistVideoInterviewRequirement: Bool?
-    let checklistVideoInterviewCompleted: Bool?
-    let checklistReleasesCmp: Bool?
-    let checklistOrientationCmp: Bool?
-    let checklist1850DataSheetCmp: Bool?
-    let checklistElevatorSpeechCmp: Bool?
+    let resumeRequired: Bool?
+    let resumeCompleted: Bool?
+    let videoInterviewRequired: Bool?
+    let videoInterviewCompleted: Bool?
+    let releasesCompleted: Bool?
+    let orientationCompleted: Bool?
+    let dataSheetCompleted: Bool?
+    let elevatorSpeechCompleted: Bool?
     let race: String?
     let fluentLanguages: String?
     let premiums: String?

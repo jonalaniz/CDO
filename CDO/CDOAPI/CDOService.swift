@@ -32,7 +32,7 @@ final class CDOService {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.calendars.path)!
 
         var components = URLComponents(url: urlWithEndpoint, resolvingAgainstBaseURL: true)
-        if withClients { components?.queryItems = [URLQueryItem(name: "withClients", value: "true")] }
+        if withClients { components?.queryItems = [URLQueryItem(name: "includeClients", value: "true")] }
         guard let url = components?.url else { throw APIManagerError.invalidURL }
 
         return try await apiManager.request(
@@ -44,7 +44,7 @@ final class CDOService {
     }
 
     func fetchAllClients() async throws -> [Client] {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.allClients.path)!
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.clients.path)!
 
         return try await apiManager.request(
             url: urlWithEndpoint,
@@ -55,7 +55,7 @@ final class CDOService {
     }
 
     func fetchClientSummaries() async throws -> [ClientSummary] {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.clients.path)!
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.clientSummaries.path)!
 
         return try await apiManager.request(
             url: urlWithEndpoint,
@@ -89,6 +89,17 @@ final class CDOService {
 
     func fetchEmployers() async throws -> [Employer] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.employers.path)!
+
+        return try await apiManager.request(
+            url: urlWithEndpoint,
+            httpMethod: .get,
+            body: nil,
+            headers: nil
+        )
+    }
+
+    func fetchStates() async throws -> [State] {
+        let urlWithEndpoint = URL(string: baseURLString + Endpoint.states.path)!
 
         return try await apiManager.request(
             url: urlWithEndpoint,

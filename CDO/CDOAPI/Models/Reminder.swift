@@ -9,7 +9,7 @@ import Foundation
 
 struct Reminder: Codable {
     let id: Int
-    let actionDate: Date?
+    let date: Date?
     let clientID: Int?
     let clientName: String?
     let description: String?

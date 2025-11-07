@@ -9,7 +9,9 @@ import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
+    let coordinator = CDOCoordinator.shared
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        coordinator.start()
         // Insert code here to initialize your application
     }
 

@@ -195,7 +195,9 @@ extension WindowController: NSToolbarDelegate {
             toolbarItem.label = "Filter"
             toolbarItem.toolTip = "Show only completed items"
             toolbarItem.isBordered = true
-            toolbarItem.image = NSImage(systemSymbolName: "line.3.horizontal.decrease.circle", accessibilityDescription: "")
+            toolbarItem.image = NSImage(
+                systemSymbolName: "line.3.horizontal.decrease.circle",
+                accessibilityDescription: "")
             addButtomToolbarItem = toolbarItem
             return toolbarItem
         }

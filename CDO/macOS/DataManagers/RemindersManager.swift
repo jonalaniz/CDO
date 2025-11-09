@@ -106,7 +106,8 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
         case .clentName:
             view.textField?.stringValue = reminder.clientName ?? ""
         case .actionDate:
-            view.textField?.stringValue = reminder.actionDate?.formatted(date: .numeric, time: .omitted) ?? ""
+            view.textField?.stringValue = reminder.date?
+            .formatted(date: .numeric, time: .omitted) ?? ""
         case .description:
             view.textField?.stringValue = reminder.description ?? ""
             view.toolTip = reminder.description ?? ""

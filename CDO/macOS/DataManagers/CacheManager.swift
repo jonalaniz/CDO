@@ -8,6 +8,7 @@
 import Foundation
 
 class StatesManager: BaseDataManager {
+    let stateService = StatesService.shared
     // MARK: - Shared Instance
     static let shared = StatesManager()
 
@@ -28,7 +29,7 @@ class StatesManager: BaseDataManager {
     func fetchStates() {
         Task {
             do {
-                let fetchedStates = try await service.fetchStates()
+                let fetchedStates = try await stateService.fetchAll()
                 guard fetchedStates != states else { return }
                 states = fetchedStates
                 print(states)

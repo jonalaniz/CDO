@@ -14,6 +14,7 @@ enum APIManagerError: Error {
     case invalidURL
     case serializaitonFailed
     case somethingWentWrong(error: Error?)
+    case unableToEncodeObject
 
     var errorDescription: String {
         switch self {
@@ -29,6 +30,8 @@ enum APIManagerError: Error {
             return "JSONSerialization Failed"
         case .somethingWentWrong(let error):
             return error?.localizedDescription ?? "Something went wrong"
+        case .unableToEncodeObject:
+            return "Unable to encode object"
         }
     }
 }

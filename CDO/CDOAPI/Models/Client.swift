@@ -27,7 +27,7 @@ struct Client: Codable {
     let counselor: String
 
     // MARK: - Optional Child Fields
-    let reminders: [Reminder]
+    let reminders: [Reminder]?
 
     // MARK: - Optional Fields
     let startDate: Date?

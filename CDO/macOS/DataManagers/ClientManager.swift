@@ -21,7 +21,7 @@ final class ClientManager: BaseDataManager {
     func fetchAllClientData() {
         Task {
             do {
-                clients = try await service.fetchAllClients()
+                clients = try await service.fetchClients()
             } catch {
                 print(error)
             }

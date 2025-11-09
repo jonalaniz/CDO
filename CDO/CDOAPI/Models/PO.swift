@@ -14,7 +14,7 @@ struct PO: Codable {
     let startDate: Date
     let endDate: Date
     let office: String?
-    let employerID: String?
+    let employerID: Int?
     let unitCost: Double?
     let unitOfMeasurement: String?
 }

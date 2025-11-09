@@ -23,7 +23,7 @@ final class ReminderViewController: NSViewController {
     func updateUI(with reminder: Reminder) {
         // Select a client based on the date
         descriptionField.stringValue = reminder.description ?? ""
-        datePicker.dateValue = reminder.actionDate ?? Date()
+        datePicker.dateValue = reminder.date ?? Date()
         completeButton.title = reminder.complete ? "Uncomplete" : "Complete"
     }
 

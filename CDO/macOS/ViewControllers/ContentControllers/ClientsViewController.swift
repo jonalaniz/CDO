@@ -32,12 +32,13 @@ extension ClientsViewController: DataManagerDelegate {
     }
 
     func didSelect() {
-        let id = manager.clientSummaries[tableView.selectedRow].id
-        manager.fetchClient(id: id)
-
         // Checked for cached object to send to our inpector
-        guard let cachedItem = manager.cachedItem(for: id)
-        else { return }
+        guard let cachedItem = manager.cachedItem(at: tableView.selectedRow)
+        else {
+            return
+        }
+
+        // TODO: The inspector will take care of updating the views
         selectedObjectToRepresent(cachedItem)
     }
 }

@@ -35,21 +35,28 @@ final class CDOTests: XCTestCase {
         }
     }
 
-    func testServiceDecode() async throws {
+    func testClientService() async throws {
+        let service = await ClientService.shared
         do {
-            _ = try await service.fetchClients()
-            _ = try await service.fetchCounselors()
-            _ = try await service.fetchEmployers()
-            _ = try await service.fetchPOs()
-            _ = try await service.fetchReminders()
+            _ = try await service.fetchAll()
+            _ = try await service.fetch(id: 2663)
         } catch {
             print(error)
         }
     }
 
-    func testStateService() async throws {
-        let service = StatesService.shared
+    func testCounselorService() async throws {
+        let service = await CounselorService.shared
+        do {
+            _ = try await service.fetchAll()
+            _ = try await service.fetch(id: 2663)
+        } catch {
+            print(error)
+        }
+    }
 
+    func testEmployerService() async throws {
+        let service = await EmployerService.shared
         do {
             _ = try await service.fetchAll()
         } catch {
@@ -57,10 +64,31 @@ final class CDOTests: XCTestCase {
         }
     }
 
-    func testSingleClient() async throws {
+    func testPOService() async throws {
+        let service = await POService.shared
         do {
-            let client = try await service.fetchClient(id: 2663)
-            print(client)
+            _ = try await service.fetchAll()
+        } catch {
+            print(error)
+        }
+    }
+
+    func testReminderService() async throws {
+        let service = await ReminderService.shared
+        do {
+            _ = try await service.fetchAll()
+            _ = try await service.fetchWithClients()
+        } catch {
+            print(error)
+        }
+    }
+
+    func testStateService() async throws {
+        let service = await StatesService.shared
+        do {
+            _ = try await service.fetchAll()
+        } catch {
+            print(error)
         }
     }
 }

@@ -14,13 +14,25 @@ protocol DataManagerDelegate: AnyObject {
 }
 
 class BaseDataManager: NSObject {
-    let service = CDOService.shared
     weak var delegate: DataManagerDelegate?
 
     func cachedItem(for id: Int) -> Any? { return nil }
 
     @MainActor
+    func updateDelegate() {
+        delegate?.didUpdateItems()
+    }
+
+    @MainActor
     func updatedItem(_ item: Any) {
         delegate?.didUpdateItem(item)
+    }
+
+    func load<T: Codable>(_ key: CacheKey) -> T? {
+        CacheManager.shared.load(forKey: key)
+    }
+
+    func save(_ object: Codable, key: CacheKey) {
+        CacheManager.shared.save(object, forKey: key)
     }
 }

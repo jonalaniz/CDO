@@ -12,20 +12,36 @@ final class RemindersManager: BaseDataManager {
     static let shared = RemindersManager()
     private override init() {}
 
-    var isFiltered = false
+    // MARK: - Properties
+    private let service = ReminderService.shared
     private var reminders = [Reminder]()
     private var filteredReminders: [Reminder] {
         reminders.filter { !$0.complete }
     }
-
     private var sortedByColumn: Column?
+    var isFiltered = false
+
+    // MARK: - Public API
+    func initialize() async {
+        guard let cachedReminders: [Reminder] = load(.reminders)
+        else {
+            fetchReminders()
+            return
+        }
+
+        reminders = cachedReminders
+    }
 
     func fetchReminders() {
         Task {
             do {
-                reminders = try await service.fetchReminders(withClients: true)
+                reminders = try await service.fetchWithClients()
                     .sorted {
                     $0.id < $1.id
+                }
+                save(reminders, key: .reminders)
+                for reminder in reminders {
+                    print(reminder.complete)
                 }
                 updateDelegate()
             } catch {
@@ -37,7 +53,7 @@ final class RemindersManager: BaseDataManager {
     func fetchReminder(id: Int) {
         Task {
             do {
-                let reminder = try await service.fetchReminder(with: id)
+                let reminder = try await service.fetch(id: id)
                 updatedItem(reminder)
             }
         }
@@ -45,11 +61,6 @@ final class RemindersManager: BaseDataManager {
 
     func idForSelectedRow(_ row: Int) -> Int {
         isFiltered ? filteredReminders[row].id : reminders[row].id
-    }
-
-    @MainActor
-    private func updateDelegate() {
-        delegate?.didUpdateItems()
     }
 
     override func cachedItem(for id: Int) -> Any? {

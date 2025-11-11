@@ -27,6 +27,10 @@ final class CDOCoordinator: NSObject {
         cacheManager.initialize()
     }
 
+    func syncDidFinish() {
+
+    }
+
     func navigateToViewController(_ source: SourceItem) {
         guard let splitVC = splitViewController else {
             return

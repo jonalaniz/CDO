@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct ClientMenuItem {
+    let id: Int
+    let name: String
+}
+
 struct ClientSummary: Codable {
     let id: Int
     let firstName: String
@@ -16,6 +21,12 @@ struct ClientSummary: Codable {
     let city: String
     let state: String
     let zip: String?
+
+    func asClientMenuItem() -> ClientMenuItem {
+        let nameArray = [lastName, firstName]
+        let name = nameArray.compactMap(\.self).joined(separator: ", ")
+        return ClientMenuItem(id: id, name: name)
+    }
 }
 
 struct Client: Codable {

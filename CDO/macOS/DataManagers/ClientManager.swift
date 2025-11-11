@@ -13,15 +13,31 @@ final class ClientManager: BaseDataManager {
     private override init() {}
 
     // MARK: - Properties
+    private let service = ClientService.shared
     private var clients = [Client]()
-    var clientSummaries = [ClientSummary]()
-    private var sortedByColumn: Column?
+    private var summaries = [ClientSummary]()
+    private var selectedColumn: Column?
 
     // MARK: - Public API
+    func initialize() async {
+        guard
+            let cachedSummaries: [ClientSummary] = load(.clientSummaries),
+            let cachedClients: [Client] = load(.clients)
+        else {
+            fetchClientSummaries()
+            fetchAllClientData()
+            return
+        }
+
+        summaries = cachedSummaries
+        clients = cachedClients
+    }
+
     func fetchAllClientData() {
         Task {
             do {
-                clients = try await service.fetchClients()
+                clients = try await service.fetchAll()
+                save(clients, key: .clients)
             } catch {
                 print(error)
             }
@@ -31,8 +47,9 @@ final class ClientManager: BaseDataManager {
     func fetchClientSummaries() {
         Task {
             do {
-                clientSummaries = try await service.fetchClientSummaries()
+                summaries = try await service.fetchSummaries()
                     .sorted { $0.id < $1.id }
+                save(summaries, key: .clientSummaries)
                 updateDelegate()
             } catch {
                 print(error)
@@ -43,24 +60,23 @@ final class ClientManager: BaseDataManager {
     func fetchClient(id: Int) {
         Task {
             do {
-                let client = try await service.fetchClient(id: id)
+                let client = try await service.fetch(id: id)
                 updatedItem(client)
             }
         }
     }
 
-    @MainActor
-    private func updateDelegate() {
-        delegate?.didUpdateItems()
-    }
-
-    @MainActor
-    private func updatedItem(_ client: Client) {
-        delegate?.didUpdateItem(client)
-    }
-
     override func cachedItem(for id: Int) -> Any? {
         return clients.first(where: { $0.id == id })
+    }
+
+    func cachedItem(at index: Int) -> Any? {
+        return clients[index]
+    }
+
+    func clientMenuArray() -> [ClientMenuItem] {
+        let clientArray = summaries.map { $0.asClientMenuItem() }
+        return clientArray.sorted { $0.name < $1.name }
     }
 }
 
@@ -80,7 +96,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return clientSummaries.count
+        return summaries.count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -89,7 +105,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
             let column = Column(rawValue: tableColumn.identifier.rawValue)
         else { return nil }
 
-        let client = clientSummaries[row]
+        let client = summaries[row]
 
         guard let cell = tableView.makeView(
             withIdentifier: column.identifier, owner: self
@@ -122,26 +138,26 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     private func sortBy(_ column: Column) {
-        guard column != sortedByColumn else {
-            clientSummaries.reverse()
+        guard column != selectedColumn else {
+            summaries.reverse()
             return
         }
 
-        sortedByColumn = column
+        selectedColumn = column
 
         switch column {
-        case .firstName: clientSummaries.sort {
+        case .firstName: summaries.sort {
             ($0.firstName == $1.firstName) ? $0.lastName < $1.lastName : $0.firstName < $1.firstName
         }
-        case .lastName: clientSummaries.sort {
+        case .lastName: summaries.sort {
             ($0.lastName == $1.lastName) ? $0.firstName < $1.firstName : $0.lastName < $1.lastName
         }
         case .address1: return
         case .address2: return
-        case .city: clientSummaries.sort {
+        case .city: summaries.sort {
             ($0.city == $1.city) ? $0.lastName < $1.lastName : $0.city < $0.city
         }
-        case .state: clientSummaries.sort {
+        case .state: summaries.sort {
             ($0.state < $1.state) ? $0.lastName < $1.lastName : $0.state < $1.state
         }
         case .zip: return

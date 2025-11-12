@@ -21,7 +21,7 @@ struct Referral: Codable {
     let salary: String?
     let hireDate: Date?
     let endDate: Date?
-    let daysonJob: Float?
+    let daysOnJob: Float?
     let clientName: String?
     let counselorName: String?
     let active: Bool?

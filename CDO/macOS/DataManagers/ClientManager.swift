@@ -14,7 +14,7 @@ final class ClientManager: BaseDataManager {
 
     // MARK: - Properties
     private let service = ClientService.shared
-    private var clients = [Client]()
+    private var clients = [ClientDetail]()
     private var summaries = [ClientSummary]()
     private var selectedColumn: Column?
 
@@ -22,7 +22,7 @@ final class ClientManager: BaseDataManager {
     func initialize() async {
         guard
             let cachedSummaries: [ClientSummary] = load(.clientSummaries),
-            let cachedClients: [Client] = load(.clients)
+            let cachedClients: [ClientDetail] = load(.clients)
         else {
             fetchClientSummaries()
             fetchAllClientData()

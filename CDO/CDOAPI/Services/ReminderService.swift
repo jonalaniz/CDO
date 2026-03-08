@@ -9,7 +9,7 @@ import Foundation
 
 final class ReminderService: CRUDService {
     static let shared = ReminderService()
-    typealias Model = Reminder
+    typealias Model = ReminderDetail
 
     private let apiManager = APIManager.shared
     private let baseURLString = "http://127.0.0.1:8080"
@@ -47,7 +47,7 @@ final class ReminderService: CRUDService {
     }
 
     // MARK: - Reminder Specific Requests
-    func fetchWithClients() async throws -> [Reminder] {
+    func fetchWithClients() async throws -> [ReminderDetail] {
         let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminders.path)!
         var components = URLComponents(url: urlWithEndpoint, resolvingAgainstBaseURL: true)
         components?.queryItems = [URLQueryItem(name: "includeClients", value: "true")]

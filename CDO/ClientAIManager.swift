@@ -14,7 +14,7 @@ final class ClientAIManager: NSObject {
 
     private override init() {}
 
-    func jobOpportunitiesFor(_ client: Client) {
+    func jobOpportunitiesFor(_ client: ClientDetail) {
         Task {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted

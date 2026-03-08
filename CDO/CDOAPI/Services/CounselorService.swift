@@ -9,7 +9,7 @@ import Foundation
 
 final class CounselorService: CRUDService {
     static let shared = CounselorService()
-    typealias Model = Counselor
+    typealias Model = CounselorDetail
 
     private let apiManager = APIManager.shared
     private let baseURLString = "http://127.0.0.1:8080"

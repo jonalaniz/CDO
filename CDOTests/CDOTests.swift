@@ -64,8 +64,8 @@ final class CDOTests: XCTestCase {
         }
     }
 
-    func testPOService() async throws {
-        let service = await POService.shared
+    func testSAService() async throws {
+        let service = await SAService.shared
         do {
             _ = try await service.fetchAll()
         } catch {

@@ -14,8 +14,8 @@ final class RemindersManager: BaseDataManager {
 
     // MARK: - Properties
     private let service = ReminderService.shared
-    private var reminders = [Reminder]()
-    private var filteredReminders: [Reminder] {
+    private var reminders = [ReminderDetail]()
+    private var filteredReminders: [ReminderDetail] {
         reminders.filter { !$0.complete }
     }
     private var sortedByColumn: Column?
@@ -23,7 +23,7 @@ final class RemindersManager: BaseDataManager {
 
     // MARK: - Public API
     func initialize() async {
-        guard let cachedReminders: [Reminder] = load(.reminders)
+        guard let cachedReminders: [ReminderDetail] = load(.reminders)
         else {
             fetchReminders()
             return

@@ -1,5 +1,5 @@
 //
-//  PO.swift
+//  SADetail.swift
 //  CDO
 //
 //  Created by Jon Alaniz on 11/7/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PO: Codable {
+struct SADetail: Codable {
     let id: String
     let clientID: Int
     let description: String

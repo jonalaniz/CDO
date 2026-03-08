@@ -21,8 +21,8 @@ enum SourceItem: String, CaseIterable {
     case clientDatabase = "Client Database"
     case counselorDatabase = "Counselor Database"
     case employerDatabase = "Employer Database"
-    case referralDatabase = "Referral Database"
-    case poDatabase = "PO Database"
+    case placementDatabase = "Placements Database"
+    case saDatabase = "SA Database"
 
     static var rootItems: [SourceItem] = [.main, .administrative]
 
@@ -30,7 +30,7 @@ enum SourceItem: String, CaseIterable {
         switch self {
         case .reminders, .clients, .employers:
             return .main
-        case .clientDatabase, .counselorDatabase, .employerDatabase, .referralDatabase, .poDatabase:
+        case .clientDatabase, .counselorDatabase, .employerDatabase, .placementDatabase, .saDatabase:
             return .administrative
         default: return nil
         }
@@ -68,8 +68,8 @@ enum SourceItem: String, CaseIterable {
         case .clientDatabase: "info.circle.text.page"
         case .counselorDatabase: "person.line.dotted.person"
         case .employerDatabase: "storefront"
-        case .referralDatabase: "briefcase"
-        case .poDatabase: "scroll"
+        case .placementDatabase: "briefcase"
+        case .saDatabase: "scroll"
         default: nil
         }
     }

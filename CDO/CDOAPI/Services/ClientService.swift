@@ -9,7 +9,7 @@ import Foundation
 
 final class ClientService: CRUDService {
     static let shared = ClientService()
-    typealias Model = Client
+    typealias Model = ClientDetail
 
     private let apiManager = APIManager.shared
     private let baseURLString = "http://127.0.0.1:8080"

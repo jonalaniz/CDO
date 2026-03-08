@@ -9,7 +9,7 @@ import Foundation
 
 final class EmployerService: CRUDService {
     static let shared = EmployerService()
-    typealias Model = Employer
+    typealias Model = EmployerSummary
 
     private let apiManager = APIManager.shared
     private let baseURLString = "http://127.0.0.1:8080"

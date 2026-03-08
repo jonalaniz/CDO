@@ -7,11 +7,13 @@
 
 import Foundation
 
-struct Reminder: Codable {
+struct ReminderDetail: Codable {
     let id: Int
     let date: Date?
     let clientID: Int?
-    let clientName: String?
     let description: String?
     let complete: Bool
+
+    // ClientName is a computed property
+    let clientName: String?
 }

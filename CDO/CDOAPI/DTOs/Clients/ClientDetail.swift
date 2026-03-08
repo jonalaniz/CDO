@@ -1,5 +1,5 @@
 //
-//  Clients.swift
+//  ClientDetail.swift
 //  CDO
 //
 //  Created by Jon Alaniz on 10/15/25.
@@ -7,38 +7,23 @@
 
 import Foundation
 
-struct ClientMenuItem {
+struct ClientDetail: Codable {
     let id: Int
-    let name: String
-}
 
-struct ClientSummary: Codable {
-    let id: Int
-    let firstName: String
-    let lastName: String
-    let address1: String?
-    let address2: String?
-    let city: String
-    let state: String
-    let zip: String?
-
-    func asClientMenuItem() -> ClientMenuItem {
-        let nameArray = [lastName, firstName]
-        let name = nameArray.compactMap(\.self).joined(separator: ", ")
-        return ClientMenuItem(id: id, name: name)
-    }
-}
-
-struct Client: Codable {
     // MARK: - Required Fields
-
-    let id: Int
     let firstName: String
     let lastName: String
-    let counselor: String
+    let active: Bool
+    let counselorID: Int?
 
-    // MARK: - Optional Child Fields
-    let reminders: [Reminder]?
+    // MARK: - Parent Objects
+    // TODO: Make sure this is the same object as is returned from the server
+    let counselorReference: CounselorDetail?
+
+    // MARK: - Child Objects
+    let reminders: [ReminderDetail]?
+    let sas: [SADetail]
+    let placements: [PlacementDetail]
 
     // MARK: - Optional Fields
     let startDate: Date?
@@ -62,18 +47,13 @@ struct Client: Codable {
     let email2: String?
     let email2Identity: String?
     let disability: String
-    let counselorID: Int?
-    let counselorEmail: String?
-    let counselorPhone: String?
-    let counselorFax: String?
     let clientNotes: String?
     let conditions: String?
     let documentFolder: String?
-    let active: Bool?
     let employmentGoal: String?
     let employerID: Int?
     let status: String?
-    let benefits: Benefit?
+    let benefits: String?
     let criminalCharge: String?
     let education: String?
     let transportation: String?

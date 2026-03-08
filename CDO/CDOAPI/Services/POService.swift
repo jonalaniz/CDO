@@ -1,5 +1,5 @@
 //
-//  POService.swift
+//  SAService.swift
 //  CDO
 //
 //  Created by Jon Alaniz on 11/9/25.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class POService: CRUDService {
-    static let shared = POService()
-    typealias Model = PO
+final class SAService: CRUDService {
+    static let shared = SAService()
+    typealias Model = SADetail
 
     private let apiManager = APIManager.shared
     private let baseURLString = "http://127.0.0.1:8080"

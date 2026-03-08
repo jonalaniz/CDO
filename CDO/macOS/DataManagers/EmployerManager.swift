@@ -14,11 +14,11 @@ final class EmployerManager: BaseDataManager {
 
     // MARK: - Properties
     private let service = EmployerService.shared
-    private var employers = [Employer]()
+    private var employers = [EmployerSummary]()
 
     // MARK: - Public API
     func initialize() async {
-        guard let cachedEmployers: [Employer] = load(.employers)
+        guard let cachedEmployers: [EmployerSummary] = load(.employers)
         else {
             fetchEmployers()
             return

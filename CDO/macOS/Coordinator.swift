@@ -13,9 +13,8 @@ final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
     // MARK: - Properties
-    private let cacheManager = CacheManager.shared
-    private let clientManager = ClientManager.shared
-    private let remindersManager = RemindersManager.shared
+
+    private let cdo = CDO.shared
     private let storyboard = NSStoryboard(name: "Main", bundle: nil)
 
     var splitViewController: NSSplitViewController?
@@ -24,11 +23,17 @@ final class CDOCoordinator: NSObject {
     private override init() {}
 
     func start() {
-        cacheManager.initialize()
+        guard ConfigurationManager.shared.isConfigured else {
+            showLoginSheet()
+            return
+        }
     }
 
-    func syncDidFinish() {
-
+    func showLoginSheet() {
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        if let modalVC = storyboard.instantiateController(withIdentifier: "SignInPage") as? NSViewController {
+            splitViewController?.presentAsSheet(modalVC)
+        }
     }
 
     func navigateToViewController(_ source: SourceItem) {

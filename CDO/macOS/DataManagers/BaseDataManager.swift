@@ -27,12 +27,4 @@ class BaseDataManager: NSObject {
     func updatedItem(_ item: Any) {
         delegate?.didUpdateItem(item)
     }
-
-    func load<T: Codable>(_ key: CacheKey) -> T? {
-        CacheManager.shared.load(forKey: key)
-    }
-
-    func save(_ object: Codable, key: CacheKey) {
-        CacheManager.shared.save(object, forKey: key)
-    }
 }

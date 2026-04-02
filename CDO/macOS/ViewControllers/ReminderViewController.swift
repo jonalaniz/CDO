@@ -43,12 +43,12 @@ final class ReminderViewController: NSViewController {
 
     override var representedObject: Any? {
         didSet {
-            guard let reminder = representedObject as? ReminderDetail else { return }
+            guard let reminder = representedObject as? Reminder else { return }
             updateUI(with: reminder)
         }
     }
 
-    func updateUI(with reminder: ReminderDetail) {
+    func updateUI(with reminder: Reminder) {
         // Select a client based on the date
         descriptionTextField.string = reminder.description ?? ""
         datePicker.dateValue = reminder.date ?? Date()

@@ -20,36 +20,14 @@ final class ClientManager: BaseDataManager {
 
     // MARK: - Public API
     func initialize() async {
-        guard
-            let cachedSummaries: [ClientSummary] = load(.clientSummaries),
-            let cachedClients: [ClientDetail] = load(.clients)
-        else {
-            fetchClientSummaries()
-            fetchAllClientData()
-            return
-        }
-
-        summaries = cachedSummaries
-        clients = cachedClients
-    }
-
-    func fetchAllClientData() {
-        Task {
-            do {
-                clients = try await service.fetchAll()
-                save(clients, key: .clients)
-            } catch {
-                print(error)
-            }
-        }
+        fetchClientSummaries()
     }
 
     func fetchClientSummaries() {
         Task {
             do {
-                summaries = try await service.fetchSummaries()
+                summaries = try await service.fetchAll()
                     .sorted { $0.id < $1.id }
-                save(summaries, key: .clientSummaries)
                 updateDelegate()
             } catch {
                 print(error)

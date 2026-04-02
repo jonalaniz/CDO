@@ -11,11 +11,25 @@ final class APIManager {
     public internal(set) var session = URLSession.shared
 
     static let shared = APIManager()
+    let configurationManager = ConfigurationManager.shared
+
+    private var headers: [String: String]? {
+        guard let key = configurationManager.configuration?.server.secret
+        else { return nil }
+
+        return [
+            "accept": "application/json",
+            "x-api-key": key,
+            "Content-Type": "application/json"
+        ]
+    }
 
     private init() {}
 
-    func createResource<T>(_ url: URL,
-                           body: Data) async throws -> T where T: Decodable, T: Encodable {
+    func createResource<T>(
+        _ url: URL,
+        body: Data
+    ) async throws -> T where T: Decodable, T: Encodable {
         return try await request(url: url, method: .post, body: body)
     }
 
@@ -23,8 +37,10 @@ final class APIManager {
         return try await request(url: url, method: .get)
     }
 
-    func updateResource<T>(_ url: URL,
-                           body: Data) async throws -> T where T: Decodable, T: Encodable {
+    func updateResource<T>(
+        _ url: URL,
+        body: Data
+    ) async throws -> T where T: Decodable, T: Encodable {
         return try await request(url: url, method: .patch, body: body)
     }
 
@@ -32,12 +48,12 @@ final class APIManager {
         try await request(url: url, method: .delete)
     }
 
-    private func request(url: URL,
-                         method: ServiceMethod,
-                         body: Data? = nil,
-                         headers: [String: String]? = nil
+    private func request(
+        url: URL,
+        method: ServiceMethod,
+        body: Data? = nil,
     ) async throws {
-        let request = makeRequest(url: url, method: method, body: body, headers: headers)
+        let request = makeRequest(url: url, method: method, body: body)
 
         let dataWithResponse: (data: Data, repsonse: URLResponse) = try await session.data(for: request)
 
@@ -49,20 +65,21 @@ final class APIManager {
         try response.statusCodeChecker()
     }
 
-    private func request<T>(url: URL,
-                            method: ServiceMethod,
-                            body: Data? = nil,
-                            headers: [String: String]? = nil
+    private func request<T>(
+        url: URL,
+        method: ServiceMethod,
+        body: Data? = nil,
     ) async throws -> T where T: Decodable, T: Encodable {
-        let request = makeRequest(url: url, method: method, body: body, headers: headers)
+        let headers = headers
+        let request = makeRequest(url: url, method: method, body: body)
 
         return try await self.decodeResponse(session.data(for: request))
     }
 
-    private func makeRequest(url: URL,
-                             method: ServiceMethod,
-                             body: Data?,
-                             headers: [String: String]?
+    private func makeRequest(
+        url: URL,
+        method: ServiceMethod,
+        body: Data?,
     ) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue

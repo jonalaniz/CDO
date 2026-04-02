@@ -37,9 +37,7 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         // Root (item == nil), return the number of source types
         guard let source = item as? SourceItem
-        else {
-            return SourceItem.rootItems.count
-        }
+        else { return SourceItem.rootItems.count }
 
         // Cast as a source, return the number of children
         return source.children.count
@@ -48,10 +46,7 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         // Root (item == nil), return the specfic source at the index
         guard let source = item as? SourceItem
-        else {
-            let headers: [SourceItem] = [.main, .administrative]
-            return headers[index]
-        }
+        else { return SourceItem.rootItems[index] }
 
         // Cast as a source, we return the child at the index
         return source.children[index]
@@ -75,25 +70,13 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     }
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        var text: String
-        var image: NSImage?
-        var identifier: NSUserInterfaceItemIdentifier
-
-        guard let item = item as? SourceItem
+        guard
+            let item = item as? SourceItem,
+            let view = outlineView.makeView(withIdentifier: item.identifier, owner: self) as? NSTableCellView
         else { return nil }
 
-        text = item.rawValue
-        identifier = item.identifier
-
-        if !item.isHeader {
-            if let symbol = item.image { image = symbol }
-        }
-
-        guard let view = outlineView.makeView(withIdentifier: identifier, owner: self) as? NSTableCellView
-        else { return nil }
-
-        view.textField?.stringValue = text
-        view.imageView?.image = image
+        view.textField?.stringValue = item.rawValue
+        if let symbol = item.image { view.imageView?.image = symbol }
 
         return view
     }

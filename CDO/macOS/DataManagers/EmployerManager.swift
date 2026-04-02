@@ -18,20 +18,13 @@ final class EmployerManager: BaseDataManager {
 
     // MARK: - Public API
     func initialize() async {
-        guard let cachedEmployers: [EmployerSummary] = load(.employers)
-        else {
-            fetchEmployers()
-            return
-        }
-
-        employers = cachedEmployers
+        fetchEmployers()
     }
 
     func fetchEmployers() {
         Task {
             do {
                 employers = try await service.fetchAll()
-                save(employers, key: .employers)
                 updateDelegate()
             } catch {
                 print(error)
@@ -43,5 +36,5 @@ final class EmployerManager: BaseDataManager {
 // MARK: - NSTableViewDelegate & NSTableViewDataSource
 
 extension EmployerManager: NSTableViewDelegate, NSTableViewDataSource {
-    
+
 }

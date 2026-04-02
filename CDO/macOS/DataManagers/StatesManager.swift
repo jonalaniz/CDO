@@ -17,13 +17,7 @@ class StatesManager: BaseDataManager {
     private var states = [State]()
 
     func initialize() async {
-        guard let cached: [State] = load(.states)
-        else {
-            fetchStates()
-            return
-        }
-
-        states = cached
+        fetchStates()
     }
 
     func fetchStates() {
@@ -32,7 +26,6 @@ class StatesManager: BaseDataManager {
                 let fetchedStates = try await service.fetchAll()
                 guard fetchedStates != states else { return }
                 states = fetchedStates
-                save(states, key: .states)
             } catch {
                 print(error.description)
             }

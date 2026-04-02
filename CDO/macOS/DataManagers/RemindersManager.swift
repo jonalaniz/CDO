@@ -14,8 +14,8 @@ final class RemindersManager: BaseDataManager {
 
     // MARK: - Properties
     private let service = ReminderService.shared
-    private var reminders = [ReminderDetail]()
-    private var filteredReminders: [ReminderDetail] {
+    private var reminders = [Reminder]()
+    private var filteredReminders: [Reminder] {
         reminders.filter { !$0.complete }
     }
     private var sortedByColumn: Column?
@@ -23,13 +23,7 @@ final class RemindersManager: BaseDataManager {
 
     // MARK: - Public API
     func initialize() async {
-        guard let cachedReminders: [ReminderDetail] = load(.reminders)
-        else {
-            fetchReminders()
-            return
-        }
-
-        reminders = cachedReminders
+        fetchReminders()
     }
 
     func fetchReminders() {
@@ -39,7 +33,7 @@ final class RemindersManager: BaseDataManager {
                     .sorted {
                     $0.id < $1.id
                 }
-                save(reminders, key: .reminders)
+
                 for reminder in reminders {
                     print(reminder.complete)
                 }
@@ -117,11 +111,11 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
         case .clentName:
             view.textField?.stringValue = reminder.clientName ?? ""
         case .actionDate:
-            view.textField?.stringValue = reminder.date?
-            .formatted(date: .numeric, time: .omitted) ?? ""
+            view.textField?.stringValue = reminder.date
+                .formatted(date: .numeric, time: .omitted)
         case .description:
-            view.textField?.stringValue = reminder.description ?? ""
-            view.toolTip = reminder.description ?? ""
+            view.textField?.stringValue = reminder.description
+            view.toolTip = reminder.description
         }
 
         view.layer?.opacity = reminder.complete ? 0.5 : 1.0

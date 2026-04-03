@@ -37,11 +37,11 @@ final class APIManager {
         return try await request(url: url, method: .get)
     }
 
-    func updateResource<T>(
+    func updateResource(
         _ url: URL,
         body: Data
-    ) async throws -> T where T: Decodable, T: Encodable {
-        return try await request(url: url, method: .patch, body: body)
+    ) async throws {
+        try await request(url: url, method: .patch, body: body)
     }
 
     func deleteResource(_ url: URL) async throws {
@@ -70,7 +70,6 @@ final class APIManager {
         method: ServiceMethod,
         body: Data? = nil,
     ) async throws -> T where T: Decodable, T: Encodable {
-        let headers = headers
         let request = makeRequest(url: url, method: method, body: body)
 
         return try await self.decodeResponse(session.data(for: request))

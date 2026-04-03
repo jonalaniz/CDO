@@ -29,7 +29,7 @@ final class RemindersManager: BaseDataManager {
     func fetchReminders() {
         Task {
             do {
-                reminders = try await service.fetchWithClients()
+                reminders = try await service.fetchAll()
                     .sorted {
                     $0.id < $1.id
                 }

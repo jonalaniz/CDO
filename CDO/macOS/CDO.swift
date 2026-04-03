@@ -12,7 +12,7 @@ final class CDO {
     static let shared = CDO()
 
     private let clientService = ClientService.shared
-
+    private let reminderService = ReminderService.shared
 
     private let configurationManager = ConfigurationManager.shared
 
@@ -27,6 +27,7 @@ final class CDO {
 
     private func configureNetworking(with secret: String) {
         clientService.updateBaseAddress(secret)
+        reminderService.updateBaseAddress(secret)
     }
 
 }

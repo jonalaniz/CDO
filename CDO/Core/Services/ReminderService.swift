@@ -9,50 +9,46 @@ import Foundation
 
 final class ReminderService: CRUDService {
     static let shared = ReminderService()
+
     typealias Model = Reminder
+    typealias Detail = Reminder
 
     private let apiManager = APIManager.shared
-    private var baseURLString = "http://127.0.0.1:8080"
+    private var baseURLString = ""
 
     private init() {}
 
     func fetchAll() async throws -> [Model] {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminders.path)!
-        return try await apiManager.fetchResource(urlWithEndpoint)
-    }
-
-    func fetch(id: Int) async throws -> Model {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminder(id).path)!
-        return try await apiManager.fetchResource(urlWithEndpoint)
-    }
-
-    func create(_ item: Codable) async throws -> Model {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminders.path)!
-        guard let data = try? JSONEncoder().encode(item)
-        else { throw APIManagerError.unableToEncodeObject }
-
-        return try await apiManager.createResource(urlWithEndpoint, body: data)
-    }
-
-    func update(id: Int, with item: Codable) async throws -> Model {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminder(id).path)!
-        guard let data = try? JSONEncoder().encode(item)
-        else { throw APIManagerError.unableToEncodeObject }
-        return try await apiManager.updateResource(urlWithEndpoint, body: data)
-    }
-
-    func delete(id: Int) async throws {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminder(id).path)!
-        try await apiManager.deleteResource(urlWithEndpoint)
-    }
-
-    // MARK: - Reminder Specific Requests
-    func fetchWithClients() async throws -> [Reminder] {
-        let urlWithEndpoint = URL(string: baseURLString + Endpoint.reminders.path)!
-        var components = URLComponents(url: urlWithEndpoint, resolvingAgainstBaseURL: true)
+        let fullAddress = URL(string: baseURLString + Endpoint.reminders.path)!
+        var components = URLComponents(url: fullAddress, resolvingAgainstBaseURL: true)
         components?.queryItems = [URLQueryItem(name: "includeClients", value: "true")]
         guard let url = components?.url else { throw APIManagerError.invalidURL }
         return try await apiManager.fetchResource(url)
+    }
+
+    func fetch(id: Int) async throws -> Detail {
+        let fullAddress = URL(string: baseURLString + Endpoint.reminder(id).path)!
+        return try await apiManager.fetchResource(fullAddress)
+    }
+
+    func create(_ item: Codable) async throws -> Detail {
+        let fullAddress = URL(string: baseURLString + Endpoint.reminders.path)!
+        guard let data = try? JSONEncoder().encode(item)
+        else { throw APIManagerError.unableToEncodeObject }
+
+        return try await apiManager.createResource(fullAddress, body: data)
+    }
+
+    func update(id: Int, with item: Codable) async throws {
+        let fullAddress = URL(string: baseURLString + Endpoint.reminder(id).path)!
+        guard let data = try? JSONEncoder().encode(item)
+        else { throw APIManagerError.unableToEncodeObject }
+        try await apiManager.updateResource(fullAddress, body: data)
+    }
+
+    func delete(id: Int) async throws {
+        let fullAddress = URL(string: baseURLString + Endpoint.reminder(id).path)!
+        try await apiManager.deleteResource(fullAddress)
     }
 
     // MARK: - Convenience Methods

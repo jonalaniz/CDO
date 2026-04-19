@@ -8,15 +8,13 @@
 import AppKit
 
 final class ClientManager: BaseDataManager {
-    // MARK: - Shared Instance
-    static let shared = ClientManager()
-    private override init() {}
-
-    // MARK: - Properties
-    private let service = ClientService.shared
-    private var clients = [ClientDetail]()
-    private var summaries = [ClientSummary]()
+    private let service: ClientService
+    private var clients = [ClientSummary]()
     private var selectedColumn: Column?
+
+    init(service: ClientService) {
+        self.service = service
+    }
 
     // MARK: - Public API
     func initialize() async {
@@ -26,7 +24,7 @@ final class ClientManager: BaseDataManager {
     func fetchClientSummaries() {
         Task {
             do {
-                summaries = try await service.fetchAll()
+                clients = try await service.fetchAll()
                     .sorted { $0.id < $1.id }
                 updateDelegate()
             } catch {
@@ -53,7 +51,7 @@ final class ClientManager: BaseDataManager {
     }
 
     func clientMenuArray() -> [ClientMenuItem] {
-        let clientArray = summaries.map { $0.asClientMenuItem() }
+        let clientArray = clients.map { $0.asClientMenuItem() }
         return clientArray.sorted { $0.name < $1.name }
     }
 }
@@ -74,7 +72,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return summaries.count
+        return clients.count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -83,7 +81,7 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
             let column = Column(rawValue: tableColumn.identifier.rawValue)
         else { return nil }
 
-        let client = summaries[row]
+        let client = clients[row]
 
         guard let cell = tableView.makeView(
             withIdentifier: column.identifier, owner: self
@@ -117,26 +115,35 @@ extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
 
     private func sortBy(_ column: Column) {
         guard column != selectedColumn else {
-            summaries.reverse()
+            clients.reverse()
+            updateDelegate()
             return
         }
 
         selectedColumn = column
 
         switch column {
-        case .firstName: summaries.sort {
-            ($0.firstName == $1.firstName) ? $0.lastName < $1.lastName : $0.firstName < $1.firstName
+        case .firstName: clients.sort {
+            ($0.firstName == $1.firstName)
+            ? $0.lastName < $1.lastName
+            : $0.firstName < $1.firstName
         }
-        case .lastName: summaries.sort {
-            ($0.lastName == $1.lastName) ? $0.firstName < $1.firstName : $0.lastName < $1.lastName
+        case .lastName: clients.sort {
+            ($0.lastName == $1.lastName)
+            ? $0.firstName < $1.firstName
+            : $0.lastName < $1.lastName
         }
         case .address1: return
         case .address2: return
-        case .city: summaries.sort {
-            ($0.city == $1.city) ? $0.lastName < $1.lastName : $0.city < $0.city
+        case .city: clients.sort {
+            ($0.city == $1.city)
+            ? $0.lastName < $1.lastName
+            : $0.city < $0.city
         }
-        case .state: summaries.sort {
-            ($0.state < $1.state) ? $0.lastName < $1.lastName : $0.state < $1.state
+        case .state: clients.sort {
+            ($0.state < $1.state)
+            ? $0.lastName < $1.lastName
+            : $0.state < $1.state
         }
         case .zip: return
         }

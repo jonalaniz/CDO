@@ -102,7 +102,7 @@ class WindowController: NSWindowController {
         switch source {
         case .clients:
             filterableDataManager = nil
-            currentItemCreationprovidingObject =  ClientManager.shared
+            currentItemCreationprovidingObject =  CDO.shared.clientManager
         case .reminders:
             filterableDataManager = RemindersManager.shared
             currentItemCreationprovidingObject = nil

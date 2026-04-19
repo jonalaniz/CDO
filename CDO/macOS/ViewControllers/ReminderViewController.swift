@@ -15,7 +15,7 @@ final class ReminderViewController: NSViewController {
     @IBOutlet var descriptionTextField: NSTextView!
     @IBOutlet weak var completedCleckbox: NSButton!
 
-    let clientManager = ClientManager.shared
+    let clientManager = CDO.shared.clientManager
 
     override func viewDidLoad() {
         descriptionTextField.delegate = self
@@ -50,8 +50,8 @@ final class ReminderViewController: NSViewController {
 
     func updateUI(with reminder: Reminder) {
         // Select a client based on the date
-        descriptionTextField.string = reminder.description ?? ""
-        datePicker.dateValue = reminder.date ?? Date()
+        descriptionTextField.string = reminder.description
+        datePicker.dateValue = reminder.date
         completedCleckbox.state = reminder.complete ? .on : .off
         selectClient(id: reminder.clientID)
     }

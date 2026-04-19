@@ -8,14 +8,10 @@
 import Cocoa
 
 final class CDOCoordinator: NSObject {
-    // MARK: - Shared Instance
-
     static let shared = CDOCoordinator()
 
-    // MARK: - Properties
-
     private let cdo = CDO.shared
-    private let storyboard = NSStoryboard(name: "Main", bundle: nil)
+    // private let storyboard = NSStoryboard(name: "Main", bundle: nil)
 
     var splitViewController: NSSplitViewController?
     private var windowController: WindowController?
@@ -41,10 +37,10 @@ final class CDOCoordinator: NSObject {
             return
         }
 
-        guard let destination = storyboard.instantiateController(
-            withIdentifier: source.rawValue
-        ) as? NSViewController
-        else { return }
+//        guard let destination = storyboard.instantiateController(
+//            withIdentifier: source.rawValue
+//        ) as? NSViewController
+//        else { return }
 
         // Remove the current detail item (if any)
         if splitVC.splitViewItems.count > 1 {
@@ -53,8 +49,8 @@ final class CDOCoordinator: NSObject {
         }
 
         // Add the new one
-        let newDetailItem = NSSplitViewItem(viewController: destination)
-        splitVC.insertSplitViewItem(newDetailItem, at: 1)
+//        let newDetailItem = NSSplitViewItem(viewController: destination)
+//        splitVC.insertSplitViewItem(newDetailItem, at: 1)
     }
 
     func setWindowController(_ windowController: NSWindowController) {

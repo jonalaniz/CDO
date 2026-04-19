@@ -15,5 +15,4 @@ protocol CRUDService {
     func create(_ item: Codable) async throws -> Detail
     func update(id: Int, with item: Codable) async throws
     func delete(id: Int) async throws
-    func updateBaseAddress(_ string: String)
 }

@@ -28,7 +28,6 @@ struct ClientSummary: Codable {
     let employmentGoal: String?
     let caseID: String?
 
-
     func asClientMenuItem() -> ClientMenuItem {
         let nameArray = [lastName, firstName]
         let name = nameArray.compactMap(\.self).joined(separator: ", ")

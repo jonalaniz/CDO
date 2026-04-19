@@ -8,15 +8,15 @@
 import Foundation
 
 final class ClientService: CRUDService {
-    static let shared = ClientService()
-
     typealias Model = ClientSummary
     typealias Detail = ClientDetail
 
     private let apiManager = APIManager.shared
-    private var baseURLString = ""
+    private var baseURLString: String
 
-    private init() {}
+    init(baseURL: String) {
+        baseURLString = baseURL
+    }
 
     func fetchAll() async throws -> [Model] {
         let fullAddress = URL(string: baseURLString + Endpoint.clients.path)!

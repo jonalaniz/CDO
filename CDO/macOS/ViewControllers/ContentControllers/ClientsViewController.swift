@@ -10,7 +10,7 @@ import Cocoa
 class ClientsViewController: BaseContentViewController {
     @IBOutlet weak var tableView: NSTableView!
 
-    private let manager = ClientManager.shared
+    private let manager = CDO.shared.clientManager
 
     override func viewDidLoad() {
         super.viewDidLoad()

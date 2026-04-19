@@ -101,6 +101,4 @@ class NewClientViewController: NSViewController {
     }
 }
 
-final class NewClientFactory {
-    
-}
+final class NewClientFactory {}

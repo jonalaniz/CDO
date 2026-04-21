@@ -7,9 +7,6 @@
 
 import Cocoa
 
-// TODO: The following items need to be set
-// Setting the buttons and search to those datamanagers based on source
-
 class WindowController: NSWindowController {
     private var addButtomToolbarItem: NSToolbarItem?
     private var currentSource: SourceItem?
@@ -18,7 +15,6 @@ class WindowController: NSWindowController {
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        CDOCoordinator.shared.setWindowController(self)
         configureWindow()
         configureToolbar()
     }

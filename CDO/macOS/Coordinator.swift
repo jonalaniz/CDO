@@ -11,10 +11,8 @@ final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
     private let cdo = CDO.shared
-    // private let storyboard = NSStoryboard(name: "Main", bundle: nil)
-
-    var splitViewController: NSSplitViewController?
-    private var windowController: WindowController?
+    private var splitViewController: NSSplitViewController?
+    private var window: NSWindow?
 
     private override init() {}
 
@@ -23,6 +21,8 @@ final class CDOCoordinator: NSObject {
             showLoginSheet()
             return
         }
+
+        configureMainWindow()
     }
 
     func showLoginSheet() {
@@ -37,29 +37,32 @@ final class CDOCoordinator: NSObject {
             return
         }
 
-//        guard let destination = storyboard.instantiateController(
-//            withIdentifier: source.rawValue
-//        ) as? NSViewController
-//        else { return }
-
         // Remove the current detail item (if any)
         if splitVC.splitViewItems.count > 1 {
             let currentDetail = splitVC.splitViewItems[1]
             splitVC.removeSplitViewItem(currentDetail)
         }
-
-        // Add the new one
-//        let newDetailItem = NSSplitViewItem(viewController: destination)
-//        splitVC.insertSplitViewItem(newDetailItem, at: 1)
     }
 
-    func setWindowController(_ windowController: NSWindowController) {
-        self.windowController = windowController as? WindowController
+    // MARK: - Utility Methods
+    private func configureMainWindow() {
+        let toolbar = NSToolbar(identifier: .mainWindowToolbarIdentifier)
+//        toolbar.delegate = self
+        toolbar.allowsUserCustomization = false
+        toolbar.displayMode = .iconOnly
+
+        window = WindowFactory.makeMainWindow()
+        window?.title = "CDO"
+        window?.toolbarStyle = .unified
+        window?.toolbar = toolbar
+        window?.toolbar?.validateVisibleItems()
+        window?.titlebarSeparatorStyle = .line
+        window?.makeKeyAndOrderFront(nil)
     }
 }
 
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
-        windowController?.moveToNewView(source)
+        print(source)
     }
 }

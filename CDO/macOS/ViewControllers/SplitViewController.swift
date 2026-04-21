@@ -14,7 +14,7 @@ final class SplitViewController: NSSplitViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        CDOCoordinator.shared.splitViewController = self
+        // CDOCoordinator.shared.splitViewController = self
         initializeSplitViews()
     }
 

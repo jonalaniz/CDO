@@ -9,28 +9,26 @@ import AppKit
 
 enum SourceItem: String, CaseIterable {
     // Headers
-    case main = "Main"
+    case main = "Personnel"
     case administrative = "Administrative"
 
     // Main Sources
     case reminders = "Reminders"
     case clients = "Clients"
+    case counselors = "Counselors"
     case employers = "Employers"
 
     // Administrative Sources
-    case clientDatabase = "Client Database"
-    case counselorDatabase = "Counselor Database"
-    case employerDatabase = "Employer Database"
-    case placementDatabase = "Placements Database"
-    case saDatabase = "SA Database"
+    case sas = "Service Authorizations"
+    case placements = "Placements"
 
     static var rootItems: [SourceItem] = [.main, .administrative]
 
     var parent: SourceItem? {
         switch self {
-        case .reminders, .clients, .employers:
+        case .reminders, .clients, .counselors, .employers:
             return .main
-        case .clientDatabase, .counselorDatabase, .employerDatabase, .placementDatabase, .saDatabase:
+        case .sas, .placements:
             return .administrative
         default: return nil
         }
@@ -65,11 +63,9 @@ enum SourceItem: String, CaseIterable {
         case .reminders: "\(currentDate())calendar"
         case .clients: "person"
         case .employers: "list.bullet.clipboard"
-        case .clientDatabase: "info.circle.text.page"
-        case .counselorDatabase: "person.line.dotted.person"
-        case .employerDatabase: "storefront"
-        case .placementDatabase: "briefcase"
-        case .saDatabase: "scroll"
+        case .counselors: "person.line.dotted.person"
+        case .placements: "briefcase"
+        case .sas: "scroll"
         default: nil
         }
     }

@@ -22,26 +22,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 }
-
-struct WindowFactory {
-    static func makeMainWindow() -> NSWindow {
-        let window = makeBaseWindow()
-        window.title = "CDO"
-        return window
-    }
-
-    static func makeCalendarWindow() -> NSWindow {
-        let window = makeBaseWindow()
-        window.title = "Calendar"
-        return window
-    }
-
-    static private func makeBaseWindow() -> NSWindow {
-        return NSWindow(
-            contentRect: .init(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .resizable, .miniaturizable, .unifiedTitleAndToolbar],
-            backing: .buffered,
-            defer: false
-        )
-    }
-}

@@ -8,22 +8,72 @@
 import Cocoa
 
 final class SidebarViewController: NSViewController {
-    @IBOutlet weak var outlineView: NSOutlineView!
+    private var outlineView = NSOutlineView(frame: .zero)
 
     weak var delegate: SidebarDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = CDOCoordinator.shared
-        outlineView.dataSource = self
-        outlineView.delegate = self
-        outlineView.expandItem(nil, expandChildren: true)
+        setupOutlineView()
         selectDefaultItem()
     }
 
+    override func viewDidAppear() {
+        outlineView.expandItem(nil, expandChildren: true)
+    }
+
+    private func setupOutlineView() {
+        outlineView.register(
+            NSNib(nibNamed: "SidebarCell", bundle: nil),
+            forIdentifier: SourceItem.administrative.identifier
+        )
+
+        outlineView.register(
+            NSNib(nibNamed: "SidebarCell", bundle: nil),
+            forIdentifier: SourceItem.clients.identifier
+        )
+
+        // Style OutlineView
+        outlineView.style = .sourceList
+        outlineView.headerView = nil
+        outlineView.rowSizeStyle = .default
+        outlineView.floatsGroupRows = false
+
+        // Wire Up OutlineView
+        outlineView.dataSource = self
+        outlineView.delegate = self
+
+        // Create ScrollView to contain OutlineView
+        let scrollView = NSScrollView(frame: .zero)
+        scrollView.hasVerticalScroller = true
+        scrollView.drawsBackground = false
+        scrollView.documentView = outlineView
+
+        // Add Column
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Column"))
+        outlineView.addTableColumn(column)
+        outlineView.outlineTableColumn = column
+
+        view.addSubview(scrollView)
+
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.widthAnchor.constraint(greaterThanOrEqualToConstant: 140),
+            scrollView.widthAnchor.constraint(lessThanOrEqualToConstant: 200)
+        ])
+    }
+
     private func selectDefaultItem() {
-        let row = outlineView.row(forItem: SourceItem.reminders)
-        outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+        outlineView.selectRowIndexes(
+            IndexSet(integer: outlineView.row(forItem: SourceItem.reminders)),
+            byExtendingSelection: false
+        )
     }
 }
 
@@ -72,12 +122,14 @@ extension SidebarViewController: NSOutlineViewDataSource, NSOutlineViewDelegate 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard
             let item = item as? SourceItem,
-            let view = outlineView.makeView(withIdentifier: item.identifier, owner: self) as? NSTableCellView
+            let cell = outlineView.makeView(
+                withIdentifier: item.identifier, owner: self
+            ) as? NSTableCellView
         else { return nil }
 
-        view.textField?.stringValue = item.rawValue
-        if let symbol = item.image { view.imageView?.image = symbol }
+        cell.textField?.stringValue = item.rawValue
+        cell.imageView?.image = item.image
 
-        return view
+        return cell
     }
 }

@@ -11,7 +11,8 @@ final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
     private let cdo = CDO.shared
-    private var splitViewController: NSSplitViewController?
+    private var mainSplitView: MainSplitView?
+    private var sidebarController = SidebarViewController()
     private var window: NSWindow?
 
     private override init() {}
@@ -28,30 +29,36 @@ final class CDOCoordinator: NSObject {
     func showLoginSheet() {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         if let modalVC = storyboard.instantiateController(withIdentifier: "SignInPage") as? NSViewController {
-            splitViewController?.presentAsSheet(modalVC)
+            mainSplitView?.presentAsSheet(modalVC)
         }
     }
 
     func navigateToViewController(_ source: SourceItem) {
-        guard let splitVC = splitViewController else {
-            return
-        }
-
-        // Remove the current detail item (if any)
-        if splitVC.splitViewItems.count > 1 {
-            let currentDetail = splitVC.splitViewItems[1]
-            splitVC.removeSplitViewItem(currentDetail)
-        }
     }
 
     // MARK: - Utility Methods
     private func configureMainWindow() {
+        // Configure the SplitViews
+
+        sidebarController = SidebarViewController()
+
+        mainSplitView = MainSplitView(
+            sidebar: sidebarController,
+            content: NSViewController()
+        )
+
+        // Configure the toolbar
+        // TODO: Update and make this actually work
         let toolbar = NSToolbar(identifier: .mainWindowToolbarIdentifier)
 //        toolbar.delegate = self
         toolbar.allowsUserCustomization = false
         toolbar.displayMode = .iconOnly
 
+        // Create the Window and add the split views
+        // TODO: Set the MainSplitView as the main content view
+
         window = WindowFactory.makeMainWindow()
+        window?.contentViewController = mainSplitView
         window?.title = "CDO"
         window?.toolbarStyle = .unified
         window?.toolbar = toolbar

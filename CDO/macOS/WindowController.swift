@@ -51,7 +51,7 @@ class WindowController: NSWindowController {
 
     func moveToNewView(_ source: SourceItem) {
         guard currentSource != source else { return }
-        guard let splitVC = window?.contentViewController as? SplitViewController else {
+        guard let splitVC = window?.contentViewController as? MainSplitView else {
             return
         }
 
@@ -62,10 +62,6 @@ class WindowController: NSWindowController {
             ) as? NSViewController
         else { return }
 
-        // Remove split view items that are not sidebar
-        for splitViewItem in splitVC.splitViewItems where splitViewItem != splitVC.sidebarItem {
-            splitVC.removeSplitViewItem(splitViewItem)
-        }
 
         let mainItem = NSSplitViewItem(viewController: controller)
         let inspectorItem = NSSplitViewItem(inspectorWithViewController: inspector)
@@ -75,7 +71,7 @@ class WindowController: NSWindowController {
         splitVC.contentItem = mainItem
 
         splitVC.insertSplitViewItem(mainItem, at: 1)
-        splitVC.inspectorItem = inspectorItem
+        //splitVC.inspectorItem = inspectorItem
         splitVC.addSplitViewItem(inspectorItem)
 
         configureCapabilities(for: source)
@@ -83,11 +79,11 @@ class WindowController: NSWindowController {
 
     func updateInspectorRepresentedObject(with object: Any) {
         guard
-            let splitVC = window?.contentViewController as? SplitViewController,
-            let inspector = splitVC.inspectorItem
+            let splitVC = window?.contentViewController as? MainSplitView
+            //let inspector = splitVC.inspectorItem
         else { return }
 
-        inspector.viewController.representedObject = object
+        //inspector.viewController.representedObject = object
     }
 
     func updateSubtitle(with string: String) {

@@ -16,11 +16,10 @@ final class SidebarViewController: NSViewController {
         super.viewDidLoad()
         delegate = CDOCoordinator.shared
         setupOutlineView()
-        selectDefaultItem()
     }
 
     override func viewDidAppear() {
-        outlineView.expandItem(nil, expandChildren: true)
+        selectDefaultItem()
     }
 
     private func setupOutlineView() {
@@ -63,13 +62,12 @@ final class SidebarViewController: NSViewController {
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.widthAnchor.constraint(greaterThanOrEqualToConstant: 140),
-            scrollView.widthAnchor.constraint(lessThanOrEqualToConstant: 200)
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
     private func selectDefaultItem() {
+        outlineView.expandItem(nil, expandChildren: true)
         outlineView.selectRowIndexes(
             IndexSet(integer: outlineView.row(forItem: SourceItem.reminders)),
             byExtendingSelection: false

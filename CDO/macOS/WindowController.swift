@@ -68,7 +68,7 @@ class WindowController: NSWindowController {
         inspectorItem.minimumThickness = 300
         inspectorItem.maximumThickness = 360
 
-        splitVC.contentItem = mainItem
+        // splitVC.contentItem = mainItem
 
         splitVC.insertSplitViewItem(mainItem, at: 1)
         //splitVC.inspectorItem = inspectorItem

@@ -8,21 +8,35 @@
 import Cocoa
 
 final class MainSplitView: NSSplitViewController {
-    private var sidebarItem: NSSplitViewItem
-    var contentItem: NSSplitViewItem
+    private let sidebarItem: NSSplitViewItem
+    private var contentItem: NSSplitViewItem
 
     init(sidebar: NSViewController, content: NSViewController) {
-        sidebarItem = NSSplitViewItem(sidebarWithViewController: sidebar)
-        contentItem = NSSplitViewItem(viewController: content)
+        sidebarItem = NSSplitViewItem(
+            sidebarWithViewController: sidebar
+        )
+        contentItem = NSSplitViewItem(
+            viewController: content
+        )
         super.init(nibName: nil, bundle: nil)
-        splitViewItems = [sidebarItem, contentItem]
+        setupSplitView()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setContentItem() {
+    private func setupSplitView() {
+        sidebarItem.minimumThickness = 190
+        sidebarItem.maximumThickness = 220
+        splitViewItems = [sidebarItem, contentItem]
 
+    }
+
+    func setContentItem(_ viewController: NSViewController) {
+        let splitViewItem = NSSplitViewItem(viewController: viewController)
+        removeSplitViewItem(contentItem)
+        addSplitViewItem(splitViewItem)
+        contentItem = splitViewItem
     }
 }

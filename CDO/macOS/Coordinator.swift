@@ -13,6 +13,7 @@ final class CDOCoordinator: NSObject {
     private let cdo = CDO.shared
     private var mainSplitView: MainSplitView?
     private var sidebarController = SidebarViewController()
+    private var clientSplitViewController = ClientSplitViewController()
     private var window: NSWindow?
 
     private override init() {}
@@ -44,7 +45,7 @@ final class CDOCoordinator: NSObject {
 
         mainSplitView = MainSplitView(
             sidebar: sidebarController,
-            content: NSViewController()
+            content: clientSplitViewController
         )
 
         // Configure the toolbar

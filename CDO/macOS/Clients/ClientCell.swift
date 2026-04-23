@@ -49,7 +49,7 @@ final class ClientCell: NSTableCellView {
 
         NSLayoutConstraint.activate([
             stackview.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stackview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            stackview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             stackview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
 
             line.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),

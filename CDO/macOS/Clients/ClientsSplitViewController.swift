@@ -27,8 +27,9 @@ final class ClientSplitViewController: NSSplitViewController {
     }
 
     private func setupSplitView() {
-        clientsTableViewItem.minimumThickness = 220
-        clientsTableViewItem.maximumThickness = 220
+        clientsTableViewItem.minimumThickness = 250
+        clientsTableViewItem.maximumThickness = 250
+        clientsContentItem.minimumThickness = 300
         splitViewItems = [
             clientsTableViewItem,
             clientsContentItem

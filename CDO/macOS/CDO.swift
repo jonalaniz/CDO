@@ -18,7 +18,7 @@ final class CDO {
     private let employerService = EmployerService.shared
     private let reminderService = ReminderService.shared
 
-    lazy var clientManager = ClientManager(service: clientService)
+    var clientManager: ClientManager?
 
     private let configurationManager = ConfigurationManager.shared
 
@@ -40,6 +40,8 @@ final class CDO {
     private func configureNetworking(with secret: String) {
         clientService.updateBaseAddress(secret)
         reminderService.updateBaseAddress(secret)
+
+        clientManager = ClientManager(service: clientService)
     }
 
 }

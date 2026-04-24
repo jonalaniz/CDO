@@ -7,10 +7,9 @@
 
 import Foundation
 
-class StatesManager: BaseDataManager {
+class StatesManager {
     // MARK: - Shared Instance
     static let shared = StatesManager()
-    private override init() {}
 
     // MARK: - Properties
     private let service = StatesService.shared

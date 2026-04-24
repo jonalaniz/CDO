@@ -103,6 +103,7 @@ final class APIManager {
                 T.self,
                 from: dataWithResponse.data)
         } catch {
+            print(error)
             throw APIManagerError.serializaitonFailed
         }
     }

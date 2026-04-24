@@ -8,14 +8,14 @@
 import Cocoa
 
 final class ClientSplitViewController: NSSplitViewController {
-    private let clientsTableViewItem: NSSplitViewItem
-    private let clientsContentItem: NSSplitViewItem
-    init() {
-        clientsTableViewItem = NSSplitViewItem(
-            viewController: ClientsTableViewController()
+    private let tableViewItem: NSSplitViewItem
+    private let contentViewItem: NSSplitViewItem
+    init(tableView: NSViewController, content: NSViewController) {
+        tableViewItem = NSSplitViewItem(
+            viewController: tableView
         )
-        clientsContentItem = NSSplitViewItem(
-            viewController: ClientViewController()
+        contentViewItem = NSSplitViewItem(
+            viewController: content
         )
 
         super.init(nibName: nil, bundle: nil)
@@ -27,12 +27,12 @@ final class ClientSplitViewController: NSSplitViewController {
     }
 
     private func setupSplitView() {
-        clientsTableViewItem.minimumThickness = 250
-        clientsTableViewItem.maximumThickness = 250
-        clientsContentItem.minimumThickness = 300
+        tableViewItem.minimumThickness = 250
+        tableViewItem.maximumThickness = 250
+        contentViewItem.minimumThickness = 300
         splitViewItems = [
-            clientsTableViewItem,
-            clientsContentItem
+            tableViewItem,
+            contentViewItem
         ]
     }
 }

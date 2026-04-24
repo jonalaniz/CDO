@@ -9,6 +9,7 @@ import Cocoa
 
 final class SidebarViewController: NSViewController {
     private var outlineView = NSOutlineView(frame: .zero)
+    private var hasSelectedDefault = false
 
     weak var delegate: SidebarDelegate?
 
@@ -67,11 +68,13 @@ final class SidebarViewController: NSViewController {
     }
 
     private func selectDefaultItem() {
+        guard hasSelectedDefault == false else { return }
         outlineView.expandItem(nil, expandChildren: true)
         outlineView.selectRowIndexes(
             IndexSet(integer: outlineView.row(forItem: SourceItem.reminders)),
             byExtendingSelection: false
         )
+        hasSelectedDefault = true
     }
 }
 

@@ -10,6 +10,8 @@ import Cocoa
 final class ClientViewController: NSViewController {
     let collectionView = NSCollectionView()
 
+    var client: ClientDetail?
+
     override func viewDidLoad() {
         setupCollectionView()
     }
@@ -65,6 +67,21 @@ final class ClientViewController: NSViewController {
             scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
             scrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
+
+        collectionView.isHidden = true
+    }
+
+    func setClient(_ client: ClientDetail) {
+        print("selected: \(client.firstName)")
+        self.client = client
+        collectionView.isHidden = false
+        // Do setup here
+    }
+
+    func clearClient() {
+        client = nil
+        collectionView.isHidden = true
+        // Do setup here
     }
 }
 

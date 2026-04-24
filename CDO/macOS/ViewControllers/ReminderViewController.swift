@@ -25,15 +25,15 @@ final class ReminderViewController: NSViewController {
     func setupMenu() {
         clientList.menu?.removeAllItems()
         let menu = NSMenu()
-        for client in clientManager.clientMenuArray() {
-            let menuItem = NSMenuItem(
-                title: client.name,
-                action: nil,
-                keyEquivalent: ""
-            )
-            menuItem.tag = client.id
-            menu.addItem(menuItem)
-        }
+//        for client in clientManager.clientMenuArray() {
+//            let menuItem = NSMenuItem(
+//                title: client.name,
+//                action: nil,
+//                keyEquivalent: ""
+//            )
+//            menuItem.tag = client.id
+//            menu.addItem(menuItem)
+//        }
         clientList.menu = menu
     }
 

@@ -9,7 +9,7 @@ import Foundation
 
 struct SADetail: Codable {
     // SA Specific
-    let id: String
+    let id: Int
     let serviceAuthorizationNumber: String
     let office: String?
     let description: String

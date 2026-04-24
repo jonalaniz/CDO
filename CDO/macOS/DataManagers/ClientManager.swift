@@ -7,26 +7,24 @@
 
 import AppKit
 
-final class ClientManager: BaseDataManager {
+final class ClientManager: NSObject {
+    weak var delegate: (any ClientManagerDelegate)?
     private let service: ClientService
     private var clients = [ClientSummary]()
-    private var selectedColumn: Column?
 
     init(service: ClientService) {
         self.service = service
-    }
-
-    // MARK: - Public API
-    func initialize() async {
+        super.init()
         fetchClientSummaries()
     }
 
+    // MARK: - Public API
     func fetchClientSummaries() {
         Task {
             do {
                 clients = try await service.fetchAll()
-                    .sorted { $0.id < $1.id }
-                updateDelegate()
+                    .sorted { $0.name < $1.name }
+                delegate?.summariesDidChange()
             } catch {
                 print(error)
             }
@@ -37,117 +35,46 @@ final class ClientManager: BaseDataManager {
         Task {
             do {
                 let client = try await service.fetch(id: id)
-                updatedItem(client)
+                delegate?.detailDidChange(client)
+            } catch {
+                print(error)
             }
         }
     }
-
-    override func cachedItem(for id: Int) -> Any? {
-        return clients.first(where: { $0.id == id })
-    }
-
-    func cachedItem(at index: Int) -> Any? {
-        return clients[index]
-    }
-
-    func clientMenuArray() -> [ClientMenuItem] {
-        let clientArray = clients.map { $0.asClientMenuItem() }
-        return clientArray.sorted { $0.name < $1.name }
-    }
 }
 
-extension ClientManager: NSTableViewDelegate, NSTableViewDataSource {
-    private enum Column: String, CaseIterable {
-        case firstName = "FirstNameID"
-        case lastName = "LastNameID"
-        case address1 = "Address1ID"
-        case address2 = "Address2ID"
-        case city = "CityID"
-        case state = "StateID"
-        case zip = "ZipID"
-
-        var identifier: NSUserInterfaceItemIdentifier {
-            .init(rawValue)
-        }
-    }
-
+extension ClientManager: NSTableViewDataSource, NSTableViewDelegate {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return clients.count
     }
 
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        let nameHeight = NSFont.preferredFont(forTextStyle: .headline).boundingRectForFont.height
+        let addressHeight = NSFont.preferredFont(forTextStyle: .body).boundingRectForFont.height
+        return nameHeight + (addressHeight * 2) + 20
+    }
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        guard
-            let tableColumn = tableColumn,
-            let column = Column(rawValue: tableColumn.identifier.rawValue)
-        else { return nil }
+        let cell = tableView.makeView(withIdentifier: ClientCell.identifier, owner: self)
+        as? ClientCell ?? ClientCell()
+        let client =  clients[row]
 
-        let client = clients[row]
-
-        guard let cell = tableView.makeView(
-            withIdentifier: column.identifier, owner: self
-        ) as? NSTableCellView else {
-            print("Cannot cast CellView")
-            return nil
-        }
-
-        switch column {
-        case .firstName: cell.textField?.stringValue = client.firstName
-        case .lastName: cell.textField?.stringValue = client.lastName
-        case .address1: cell.textField?.stringValue = client.address1 ?? ""
-        case .address2: cell.textField?.stringValue = client.address2 ?? ""
-        case .city: cell.textField?.stringValue = client.city
-        case .state: cell.textField?.stringValue = client.state
-        case .zip: cell.textField?.stringValue = client.zip ?? ""
-        }
+        cell.configureClient(
+            name: client.name,
+            address: client.formattedAddress,
+            id: client.id
+        )
 
         return cell
     }
 
-    func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
-        guard let column = Column(rawValue: tableColumn.identifier.rawValue)
-        else { return }
-        sortBy(column)
-    }
-
     func tableViewSelectionDidChange(_ notification: Notification) {
-        delegate?.didSelect()
-    }
+        guard
+            let tableView = notification.object as? NSTableView,
+            tableView.selectedRow != -1
+        else { return }
 
-    private func sortBy(_ column: Column) {
-        guard column != selectedColumn else {
-            clients.reverse()
-            updateDelegate()
-            return
-        }
-
-        selectedColumn = column
-
-        switch column {
-        case .firstName: clients.sort {
-            ($0.firstName == $1.firstName)
-            ? $0.lastName < $1.lastName
-            : $0.firstName < $1.firstName
-        }
-        case .lastName: clients.sort {
-            ($0.lastName == $1.lastName)
-            ? $0.firstName < $1.firstName
-            : $0.lastName < $1.lastName
-        }
-        case .address1: return
-        case .address2: return
-        case .city: clients.sort {
-            ($0.city == $1.city)
-            ? $0.lastName < $1.lastName
-            : $0.city < $0.city
-        }
-        case .state: clients.sort {
-            ($0.state < $1.state)
-            ? $0.lastName < $1.lastName
-            : $0.state < $1.state
-        }
-        case .zip: return
-        }
-
-        updateDelegate()
+        let client = clients[tableView.selectedRow]
+        fetchClient(id: client.id)
     }
 }

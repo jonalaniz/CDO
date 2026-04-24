@@ -28,6 +28,25 @@ struct ClientSummary: Codable {
     let employmentGoal: String?
     let caseID: String?
 
+    var name: String {
+        let nameArray = [lastName, firstName]
+        return nameArray.compactMap(\.self).joined(separator: ", ")
+    }
+
+    var formattedAddress: String {
+        let street = [
+            address1,
+            address2
+        ].compactMap { $0 }.joined(separator: " ")
+
+        let addressLines = [
+            street.isEmpty ? nil : street,
+            "\(city), \(state) \(zip ?? "")"
+        ].compactMap { $0 }
+
+        return addressLines.joined(separator: "\n")
+    }
+
     func asClientMenuItem() -> ClientMenuItem {
         let nameArray = [lastName, firstName]
         let name = nameArray.compactMap(\.self).joined(separator: ", ")

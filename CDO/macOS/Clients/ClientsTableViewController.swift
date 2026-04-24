@@ -20,7 +20,7 @@ final class ClientsTableViewController: NSViewController {
 
     private func setTitle() {
         guard let window = view.window else { return }
-        window.subtitle = "\(numberOfRows(in: tableView)) clients"
+        window.subtitle = "\(tableView.numberOfRows) clients"
     }
 
     private func setupTableView() {
@@ -28,9 +28,6 @@ final class ClientsTableViewController: NSViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .custom
         tableView.floatsGroupRows = false
-
-        tableView.dataSource = self
-        tableView.delegate = self
 
         let scrollView = NSScrollView(frame: .zero)
         scrollView.hasVerticalScroller = true
@@ -49,32 +46,5 @@ final class ClientsTableViewController: NSViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-    }
-}
-
-extension ClientsTableViewController: NSTableViewDataSource, NSTableViewDelegate {
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return 100
-    }
-
-    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let nameHeight = NSFont.preferredFont(forTextStyle: .headline).boundingRectForFont.height
-        let addressHeight = NSFont.preferredFont(forTextStyle: .body).boundingRectForFont.height
-        return nameHeight + (addressHeight * 3) + 20
-    }
-
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.makeView(withIdentifier: ClientCell.identifier, owner: self)
-        as? ClientCell ?? ClientCell()
-
-        cell.setLabels(
-            name: "Jon Alaniz",
-            address: """
-            4400 Piss Drive
-            Apt 420
-            San Antonio, TX 78229
-            """
-        )
-        return cell
     }
 }

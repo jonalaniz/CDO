@@ -7,10 +7,9 @@
 
 import AppKit
 
-final class RemindersManager: BaseDataManager {
+final class RemindersManager {
     // MARK: - Shared Instance
     static let shared = RemindersManager()
-    private override init() {}
 
     // MARK: - Properties
     private let service = ReminderService.shared
@@ -37,7 +36,6 @@ final class RemindersManager: BaseDataManager {
                 for reminder in reminders {
                     print(reminder.complete)
                 }
-                updateDelegate()
             } catch {
                 print(error)
             }
@@ -48,17 +46,12 @@ final class RemindersManager: BaseDataManager {
         Task {
             do {
                 let reminder = try await service.fetch(id: id)
-                updatedItem(reminder)
             }
         }
     }
 
     func idForSelectedRow(_ row: Int) -> Int {
         isFiltered ? filteredReminders[row].id : reminders[row].id
-    }
-
-    override func cachedItem(for id: Int) -> Any? {
-        return reminders.first(where: { $0.id == id })
     }
 }
 
@@ -67,13 +60,12 @@ final class RemindersManager: BaseDataManager {
 extension RemindersManager: Filterable {
     func toggleFilter() {
         isFiltered = !isFiltered
-        updateDelegate()
     }
 }
 
 // MARK: - NSTableViewDelegate & NSTableViewDataSource
 
-extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
+extension RemindersManager {
     private enum Column: String, CaseIterable {
         case clentName = "ClientNameID"
         case actionDate = "ActionDateID"
@@ -89,7 +81,7 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
-        delegate?.didSelect()
+//        delegate?.didSelect()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {

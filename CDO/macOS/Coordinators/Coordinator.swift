@@ -10,10 +10,12 @@ import Cocoa
 final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
+    // Child coordinators
+    private var clientCoordinator: ClientCoordinator?
+
     private let cdo = CDO.shared
     private var mainSplitView: MainSplitView?
     private var sidebarController = SidebarViewController()
-    private var clientSplitViewController = ClientSplitViewController()
     private var window: NSWindow?
 
     private override init() {}
@@ -27,6 +29,10 @@ final class CDOCoordinator: NSObject {
         configureMainWindow()
     }
 
+    private func setupViewControllers() {
+        // I need to seed the
+    }
+
     func showLoginSheet() {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         if let modalVC = storyboard.instantiateController(withIdentifier: "SignInPage") as? NSViewController {
@@ -37,13 +43,27 @@ final class CDOCoordinator: NSObject {
     func navigateToViewController(_ source: SourceItem) {
         switch source {
         case .reminders: mainSplitView?.setContentItem(NSViewController())
-        case .clients: mainSplitView?.setContentItem(clientSplitViewController)
+        case .clients: showClients()
         case .counselors: mainSplitView?.setContentItem(NSViewController())
         case .employers: mainSplitView?.setContentItem(NSViewController())
         case .sas: mainSplitView?.setContentItem(NSViewController())
         case .placements: mainSplitView?.setContentItem(NSViewController())
         default: return
         }
+    }
+
+    func showClients() {
+        guard let manager = cdo.clientManager else { return }
+
+        if clientCoordinator == nil {
+            let coordinator = ClientCoordinator(
+                manager: manager
+            )
+            coordinator.start()
+            clientCoordinator = coordinator
+        }
+
+        mainSplitView?.setContentItem(clientCoordinator!.rootViewController)
     }
 
     // MARK: - Utility Methods

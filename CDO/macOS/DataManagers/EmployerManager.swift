@@ -7,10 +7,9 @@
 
 import AppKit
 
-final class EmployerManager: BaseDataManager {
+final class EmployerManager {
     // MARK: - Shared Instance
     static let shared = EmployerManager()
-    private override init() {}
 
     // MARK: - Properties
     private let service = EmployerService.shared
@@ -25,16 +24,9 @@ final class EmployerManager: BaseDataManager {
         Task {
             do {
                 employers = try await service.fetchAll()
-                updateDelegate()
             } catch {
                 print(error)
             }
         }
     }
-}
-
-// MARK: - NSTableViewDelegate & NSTableViewDataSource
-
-extension EmployerManager: NSTableViewDelegate, NSTableViewDataSource {
-
 }

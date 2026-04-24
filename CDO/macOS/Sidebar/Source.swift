@@ -62,8 +62,8 @@ enum SourceItem: String, CaseIterable {
         switch self {
         case .reminders: "\(currentDate())calendar"
         case .clients: "person"
-        case .employers: "list.bullet.clipboard"
-        case .counselors: "person.line.dotted.person"
+        case .employers: "building.2"
+        case .counselors: "list.bullet.clipboard"
         case .placements: "briefcase"
         case .sas: "scroll"
         default: nil

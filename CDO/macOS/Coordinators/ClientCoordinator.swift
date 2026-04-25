@@ -58,3 +58,64 @@ extension ClientCoordinator: ClientManagerDelegate {
     }
 
 }
+
+extension ClientCoordinator: NSToolbarDelegate {
+    @objc func newClicked() {
+        print("New Client Clicked")
+    }
+
+    func toolbar(
+        _ toolbar: NSToolbar,
+        itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
+        willBeInsertedIntoToolbar flag: Bool
+    ) -> NSToolbarItem? {
+        if itemIdentifier == .addItem {
+            let item =  NSToolbarItem(itemIdentifier: itemIdentifier)
+            item.target = self
+            item.action = #selector(newClicked)
+            item.label = "New"
+            item.paletteLabel = "New"
+            item.visibilityPriority = .high
+            item.isBordered = true
+            item.image = NSImage(systemSymbolName: "plus", accessibilityDescription: "")
+            return item
+        }
+
+        if itemIdentifier == .primaryTrackingSeparator {
+            let item = NSTrackingSeparatorToolbarItem(
+                identifier: itemIdentifier,
+                splitView: rootViewController.splitView,
+                dividerIndex: 0
+            )
+            return item
+        }
+
+        return nil
+    }
+
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [
+            .flexibleSpace,
+            .toggleSidebar,
+            .sidebarTrackingSeparator,
+            .flexibleSpace,
+            .addItem,
+            .primaryTrackingSeparator,
+            .flexibleSpace,
+            .toggleInspector
+        ]
+    }
+
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [
+            .flexibleSpace,
+            .toggleSidebar,
+            .sidebarTrackingSeparator,
+            .flexibleSpace,
+            .addItem,
+            .primaryTrackingSeparator,
+            .flexibleSpace,
+            .toggleInspector
+        ]
+    }
+}

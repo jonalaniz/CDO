@@ -42,7 +42,7 @@ final class CDOCoordinator: NSObject {
 
     func navigateToViewController(_ source: SourceItem) {
         switch source {
-        case .reminders: mainSplitView?.setContentItem(NSViewController())
+        case .reminders: showReminders()
         case .clients: showClients()
         case .counselors: mainSplitView?.setContentItem(NSViewController())
         case .employers: mainSplitView?.setContentItem(NSViewController())
@@ -64,6 +64,14 @@ final class CDOCoordinator: NSObject {
         }
 
         mainSplitView?.setContentItem(clientCoordinator!.rootViewController)
+        window?.toolbar?.delegate = clientCoordinator
+        window?.toolbar?.reloadItems()
+    }
+
+    func showReminders() {
+        mainSplitView?.setContentItem(NSViewController())
+        window?.toolbar?.delegate = self
+        window?.toolbar?.reloadItems()
     }
 
     // MARK: - Utility Methods
@@ -92,5 +100,17 @@ final class CDOCoordinator: NSObject {
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
         navigateToViewController(source)
+    }
+}
+
+// TODO: Move this
+extension NSToolbar {
+    func reloadItems() {
+        for item in items {
+            removeItem(identifier: item.itemIdentifier)
+        }
+        delegate?.toolbarAllowedItemIdentifiers?(self).enumerated().forEach { index, identifier in
+            insertItem(withItemIdentifier: identifier, at: index)
+        }
     }
 }

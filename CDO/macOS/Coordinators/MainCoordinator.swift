@@ -63,6 +63,7 @@ final class CDOCoordinator: NSObject {
             clientCoordinator = coordinator
         }
 
+        resizeWindowIfNeeded(clientCoordinator!.rootViewController.minimumWidth)
         mainSplitView?.setContentItem(clientCoordinator!.rootViewController)
         window?.toolbar?.delegate = clientCoordinator
         window?.toolbar?.reloadItems()
@@ -94,6 +95,32 @@ final class CDOCoordinator: NSObject {
         window?.toolbar = toolbar
         window?.toolbar?.validateVisibleItems()
         window?.makeKeyAndOrderFront(nil)
+    }
+
+    private func resizeWindowIfNeeded(_ width: CGFloat) {
+        guard
+            let splitview = mainSplitView,
+            let window = window
+        else { return }
+
+        let sidebar = splitview.splitViewItems[0]
+        let minimum = sidebar.isCollapsed
+        ? width : width + sidebar.maximumThickness
+
+        guard window.frame.size.width < minimum else { return }
+
+        sidebar.canCollapse = false
+
+        var frame = window.frame
+        frame.size.width = minimum
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.25
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(frame, display: true)
+        } completionHandler: {
+            sidebar.canCollapse = true
+        }
     }
 }
 

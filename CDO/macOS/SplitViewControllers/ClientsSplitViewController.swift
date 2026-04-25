@@ -10,12 +10,28 @@ import Cocoa
 final class ClientSplitViewController: NSSplitViewController {
     private let tableViewItem: NSSplitViewItem
     private let contentViewItem: NSSplitViewItem
-    init(tableView: NSViewController, content: NSViewController) {
+    private let inspectorViewItem: NSSplitViewItem
+
+    private let minimumTableWidth: CGFloat = 250
+    private let minimumContentWidth: CGFloat = 300
+    private let minimumInspectorWidth: CGFloat = 250
+
+    var minimumWidth: CGFloat {
+        return inspectorViewItem.isCollapsed
+        ? minimumTableWidth + minimumContentWidth
+        : minimumTableWidth + minimumContentWidth + minimumInspectorWidth
+    }
+
+    init(tableView: NSViewController, content: NSViewController, inspector: NSViewController) {
         tableViewItem = NSSplitViewItem(
             viewController: tableView
         )
         contentViewItem = NSSplitViewItem(
             viewController: content
+        )
+
+        inspectorViewItem = NSSplitViewItem(
+            inspectorWithViewController: inspector
         )
 
         super.init(nibName: nil, bundle: nil)
@@ -27,12 +43,15 @@ final class ClientSplitViewController: NSSplitViewController {
     }
 
     private func setupSplitView() {
-        tableViewItem.minimumThickness = 250
-        tableViewItem.maximumThickness = 250
-        contentViewItem.minimumThickness = 300
+        tableViewItem.minimumThickness = minimumTableWidth
+        tableViewItem.maximumThickness = minimumTableWidth
+        contentViewItem.minimumThickness = minimumContentWidth
+        inspectorViewItem.minimumThickness = minimumInspectorWidth
+        inspectorViewItem.maximumThickness = minimumInspectorWidth
         splitViewItems = [
             tableViewItem,
-            contentViewItem
+            contentViewItem,
+            inspectorViewItem
         ]
     }
 }

@@ -55,14 +55,6 @@ final class RemindersManager {
     }
 }
 
-// MARK: - Filterable
-
-extension RemindersManager: Filterable {
-    func toggleFilter() {
-        isFiltered = !isFiltered
-    }
-}
-
 // MARK: - NSTableViewDelegate & NSTableViewDataSource
 
 extension RemindersManager {

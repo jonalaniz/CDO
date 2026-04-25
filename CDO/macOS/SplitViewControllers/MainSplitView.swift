@@ -27,7 +27,7 @@ final class MainSplitView: NSSplitViewController {
     }
 
     private func setupSplitView() {
-        sidebarItem.minimumThickness = 190
+        sidebarItem.minimumThickness = 220
         sidebarItem.maximumThickness = 220
         splitViewItems = [sidebarItem, contentItem]
 

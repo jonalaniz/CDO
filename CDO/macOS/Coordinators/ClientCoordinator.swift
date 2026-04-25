@@ -7,22 +7,28 @@
 
 import Cocoa
 
-// MARK: TODO: Make this a delegate to ClientManager
 final class ClientCoordinator: NSObject {
     private let manager: ClientManager
     private let tableViewController: ClientsTableViewController
     private let contentViewController: ClientViewController
+    private let notesViewController: NotesViewController
 
     let rootViewController: ClientSplitViewController
+
+    var minimumWindowWidth: CGFloat {
+        return rootViewController.minimumWidth
+    }
 
     init(manager: ClientManager) {
         self.manager = manager
         tableViewController = ClientsTableViewController()
         contentViewController = ClientViewController()
+        notesViewController = NotesViewController()
 
         rootViewController = ClientSplitViewController(
             tableView: tableViewController,
-            content: contentViewController
+            content: contentViewController,
+            inspector: notesViewController
         )
 
         super.init()
@@ -69,8 +75,11 @@ extension ClientCoordinator: NSToolbarDelegate {
         itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
         willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-        if itemIdentifier == .addItem {
-            let item =  NSToolbarItem(itemIdentifier: itemIdentifier)
+        let item: NSToolbarItem
+
+        switch itemIdentifier {
+        case .addItem:
+            item = NSToolbarItem(itemIdentifier: itemIdentifier)
             item.target = self
             item.action = #selector(newClicked)
             item.label = "New"
@@ -79,18 +88,20 @@ extension ClientCoordinator: NSToolbarDelegate {
             item.isBordered = true
             item.image = NSImage(systemSymbolName: "plus", accessibilityDescription: "")
             return item
-        }
-
-        if itemIdentifier == .primaryTrackingSeparator {
-            let item = NSTrackingSeparatorToolbarItem(
+        case .primaryTrackingSeparator:
+            return NSTrackingSeparatorToolbarItem(
                 identifier: itemIdentifier,
                 splitView: rootViewController.splitView,
                 dividerIndex: 0
             )
-            return item
+        case .secondaryTrackingSeparator:
+            return NSTrackingSeparatorToolbarItem(
+                identifier: itemIdentifier,
+                splitView: rootViewController.splitView,
+                dividerIndex: 1
+            )
+        default: return nil
         }
-
-        return nil
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
@@ -101,6 +112,10 @@ extension ClientCoordinator: NSToolbarDelegate {
             .flexibleSpace,
             .addItem,
             .primaryTrackingSeparator,
+            .flexibleSpace,
+            .cloudSharing,
+            .print,
+            .inspectorTrackingSeparator,
             .flexibleSpace,
             .toggleInspector
         ]
@@ -114,6 +129,10 @@ extension ClientCoordinator: NSToolbarDelegate {
             .flexibleSpace,
             .addItem,
             .primaryTrackingSeparator,
+            .flexibleSpace,
+            .cloudSharing,
+            .print,
+            .inspectorTrackingSeparator,
             .flexibleSpace,
             .toggleInspector
         ]

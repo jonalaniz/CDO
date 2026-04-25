@@ -7,6 +7,10 @@
 
 import Cocoa
 
+protocol SidebarDelegate: AnyObject {
+    func selectionMade(_ source: SourceItem)
+}
+
 final class SidebarViewController: NSViewController {
     private var outlineView = NSOutlineView(frame: .zero)
     private var hasSelectedDefault = false

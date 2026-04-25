@@ -10,10 +10,11 @@ import Cocoa
 final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
+    private let cdo = CDO.shared
+
     // Child coordinators
     private var clientCoordinator: ClientCoordinator?
 
-    private let cdo = CDO.shared
     private var mainSplitView: MainSplitView?
     private var sidebarController = SidebarViewController()
     private var window: NSWindow?
@@ -27,10 +28,6 @@ final class CDOCoordinator: NSObject {
         }
 
         configureMainWindow()
-    }
-
-    private func setupViewControllers() {
-        // I need to seed the
     }
 
     func showLoginSheet() {
@@ -54,20 +51,15 @@ final class CDOCoordinator: NSObject {
 
     func showClients() {
         guard let manager = cdo.clientManager else { return }
-
         if clientCoordinator == nil {
-            let coordinator = ClientCoordinator(
-                manager: manager
-            )
+            let coordinator = ClientCoordinator(manager: manager)
             coordinator.start()
             clientCoordinator = coordinator
         }
 
-        resizeWindowIfNeeded(clientCoordinator!.rootViewController.minimumWidth)
-        mainSplitView?.setContentItem(clientCoordinator!.rootViewController)
-        window?.makeFirstResponder(clientCoordinator?.rootViewController.view)
-        window?.toolbar?.delegate = clientCoordinator
-        window?.toolbar?.reloadItems()
+        guard let coordinator = clientCoordinator else { return }
+        resizeWindowIfNeeded(coordinator.rootViewController.minimumWidth)
+        setContent(coordinator.rootViewController, toolbarDelegate: coordinator)
     }
 
     func showReminders() {
@@ -76,7 +68,6 @@ final class CDOCoordinator: NSObject {
         window?.toolbar?.reloadItems()
     }
 
-    // MARK: - Utility Methods
     private func configureMainWindow() {
         // Configure the SplitViews
         mainSplitView = MainSplitView(
@@ -123,25 +114,17 @@ final class CDOCoordinator: NSObject {
             sidebar.canCollapse = true
         }
     }
+
+    private func setContent(_ viewController: NSViewController, toolbarDelegate: NSToolbarDelegate) {
+        mainSplitView?.setContentItem(viewController)
+        window?.makeFirstResponder(viewController.view)
+        window?.toolbar?.delegate = toolbarDelegate
+        window?.toolbar?.reloadItems()
+    }
 }
 
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
         navigateToViewController(source)
-    }
-}
-
-// TODO: Move this
-extension NSToolbar {
-    func reloadItems() {
-        for item in items {
-            removeItem(identifier: item.itemIdentifier)
-        }
-
-        delegate?.toolbarAllowedItemIdentifiers?(self).enumerated().forEach { index, identifier in
-            insertItem(withItemIdentifier: identifier, at: index)
-        }
-
-        validateVisibleItems()
     }
 }

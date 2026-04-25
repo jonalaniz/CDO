@@ -65,6 +65,7 @@ final class CDOCoordinator: NSObject {
 
         resizeWindowIfNeeded(clientCoordinator!.rootViewController.minimumWidth)
         mainSplitView?.setContentItem(clientCoordinator!.rootViewController)
+        window?.makeFirstResponder(clientCoordinator?.rootViewController.view)
         window?.toolbar?.delegate = clientCoordinator
         window?.toolbar?.reloadItems()
     }
@@ -136,8 +137,11 @@ extension NSToolbar {
         for item in items {
             removeItem(identifier: item.itemIdentifier)
         }
+
         delegate?.toolbarAllowedItemIdentifiers?(self).enumerated().forEach { index, identifier in
             insertItem(withItemIdentifier: identifier, at: index)
         }
+
+        validateVisibleItems()
     }
 }

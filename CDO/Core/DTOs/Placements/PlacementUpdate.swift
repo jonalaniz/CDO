@@ -14,7 +14,7 @@ struct PlacementUpdate: Codable {
     var position: String?
     var hireDate: Date?
     var endDate: Date?
-    var daysOnJob: Float?
+    var daysOnJob: Int?
     var day1: String?
     var day2: String?
     var day3: String?

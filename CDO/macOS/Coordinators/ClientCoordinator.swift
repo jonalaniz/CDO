@@ -39,6 +39,26 @@ final class ClientCoordinator: NSObject {
         tableViewController.tableView.delegate = manager
         tableViewController.tableView.dataSource = manager
     }
+
+    @objc func newClient() {
+        print("Show new client popup view")
+    }
+
+    @objc func openDocuments() {
+        print("Open Documents")
+    }
+
+    @objc func newReminder() {
+        print("New Reminder")
+    }
+
+    @objc func newNote() {
+        print("New Note")
+    }
+
+    @objc func saveNote() {
+        print("Save Note")
+    }
 }
 
 extension ClientCoordinator: ClientManagerDelegate {
@@ -57,84 +77,11 @@ extension ClientCoordinator: ClientManagerDelegate {
         }
 
         contentViewController.setClient(client)
+        notesViewController.setNotes(client.clientNotes)
     }
 
     func itemWasDeleted(id: Int) {
         // To be continued
     }
 
-}
-
-extension ClientCoordinator: NSToolbarDelegate {
-    @objc func newClicked() {
-        print("New Client Clicked")
-    }
-
-    func toolbar(
-        _ toolbar: NSToolbar,
-        itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
-        willBeInsertedIntoToolbar flag: Bool
-    ) -> NSToolbarItem? {
-        let item: NSToolbarItem
-
-        switch itemIdentifier {
-        case .addItem:
-            item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.target = self
-            item.action = #selector(newClicked)
-            item.label = "New"
-            item.paletteLabel = "New"
-            item.visibilityPriority = .high
-            item.isBordered = true
-            item.image = NSImage(systemSymbolName: "plus", accessibilityDescription: "")
-            return item
-        case .primaryTrackingSeparator:
-            return NSTrackingSeparatorToolbarItem(
-                identifier: itemIdentifier,
-                splitView: rootViewController.splitView,
-                dividerIndex: 0
-            )
-        case .secondaryTrackingSeparator:
-            return NSTrackingSeparatorToolbarItem(
-                identifier: itemIdentifier,
-                splitView: rootViewController.splitView,
-                dividerIndex: 1
-            )
-        default: return nil
-        }
-    }
-
-    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [
-            .flexibleSpace,
-            .toggleSidebar,
-            .sidebarTrackingSeparator,
-            .flexibleSpace,
-            .addItem,
-            .primaryTrackingSeparator,
-            .flexibleSpace,
-            .cloudSharing,
-            .print,
-            .inspectorTrackingSeparator,
-            .flexibleSpace,
-            .toggleInspector
-        ]
-    }
-
-    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [
-            .flexibleSpace,
-            .toggleSidebar,
-            .sidebarTrackingSeparator,
-            .flexibleSpace,
-            .addItem,
-            .primaryTrackingSeparator,
-            .flexibleSpace,
-            .cloudSharing,
-            .print,
-            .inspectorTrackingSeparator,
-            .flexibleSpace,
-            .toggleInspector
-        ]
-    }
 }

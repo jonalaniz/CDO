@@ -17,7 +17,7 @@ extension CDOCoordinator: NSToolbarDelegate {
         itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
         willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-        if itemIdentifier == .addItem {
+        if itemIdentifier == .newItem {
             let item =  NSToolbarItem(itemIdentifier: itemIdentifier)
             item.target = self
             item.action = #selector(addClicked)

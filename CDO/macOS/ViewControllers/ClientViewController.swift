@@ -53,11 +53,8 @@ final class ClientViewController: NSViewController {
     }
 
     private func constrainUI() {
-        let scrollView = NSScrollView(frame: .zero)
-        scrollView.hasVerticalScroller = true
-        scrollView.drawsBackground = false
+        let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = collectionView
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(scrollView)
 
@@ -81,7 +78,6 @@ final class ClientViewController: NSViewController {
     func clearClient() {
         client = nil
         collectionView.isHidden = true
-        // Do setup here
     }
 }
 
@@ -90,7 +86,10 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
         return ClientCard.allCases.count
     }
 
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+    func collectionView(
+        _ collectionView: NSCollectionView,
+        itemForRepresentedObjectAt indexPath: IndexPath)
+    -> NSCollectionViewItem {
         guard let card = ClientCard(rawValue: indexPath.item) else { return NSCollectionViewItem() }
         let cell = ClientCollectionViewItem()
         cell.titleLabel.stringValue = card.title
@@ -115,7 +114,7 @@ enum ClientCard: Int, CaseIterable {
         case .caseInfo: "Case Information"
         case .conditions: "Conditions"
         case .sas: "Service Authorizations"
-        case .employmentProfile: "Employemnt Profile"
+        case .employmentProfile: "Employment Profile"
         case .placements: "Placements"
         case .checklist: "Checklist"
         }
@@ -123,8 +122,6 @@ enum ClientCard: Int, CaseIterable {
 }
 
 class ClientCollectionViewItem: NSCollectionViewItem {
-    static let identifier = NSUserInterfaceItemIdentifier("ClientCollectionCell")
-
     let glassView = NSGlassEffectView()
     let contentView = NSGlassEffectView()
     let button = NSButton(
@@ -154,8 +151,6 @@ class ClientCollectionViewItem: NSCollectionViewItem {
 
     private func constrainViews() {
         titleLabel.font = NSFont.preferredFont(forTextStyle: .title1)
-//        button.wantsLayer = true
-//        button.layer?.cornerRadius = height / 2
         button.bezelStyle = .glass
         button.borderShape = .circle
 

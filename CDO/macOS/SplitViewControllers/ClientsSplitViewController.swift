@@ -14,7 +14,7 @@ final class ClientSplitViewController: NSSplitViewController {
 
     private let minimumTableWidth: CGFloat = 250
     private let minimumContentWidth: CGFloat = 300
-    private let minimumInspectorWidth: CGFloat = 250
+    private let minimumInspectorWidth: CGFloat = 300
 
     var minimumWidth: CGFloat {
         return inspectorViewItem.isCollapsed

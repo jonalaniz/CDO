@@ -24,6 +24,7 @@ struct ClientDetail: Codable {
     let reminders: [Reminder]?
     let sas: [SADetail]
     let placements: [PlacementDetail]
+    let clientNotes: [ClientNote]
 
     // MARK: - Optional Fields
     let startDate: Date?
@@ -47,7 +48,6 @@ struct ClientDetail: Codable {
     let email2: String?
     let email2Identity: String?
     let disability: String
-    let clientNotes: String?
     let conditions: String?
     let documentFolder: String?
     let employmentGoal: String?

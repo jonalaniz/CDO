@@ -28,17 +28,14 @@ final class ClientsTableViewController: NSViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .custom
         tableView.floatsGroupRows = false
+        tableView.addTableColumn(
+            NSTableColumn()
+        )
 
-        let scrollView = NSScrollView(frame: .zero)
-        scrollView.hasVerticalScroller = true
-        scrollView.drawsBackground = false
+        let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = tableView
 
-        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Column"))
-        tableView.addTableColumn(column)
-
         view.addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),

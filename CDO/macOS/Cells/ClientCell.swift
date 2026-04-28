@@ -9,8 +9,8 @@ import Cocoa
 
 final class ClientCell: NSTableCellView {
     static var identifier = NSUserInterfaceItemIdentifier("ClientCell")
-    private var name = NSTextField(labelWithString: "")
-    private var address = NSTextField(labelWithString: "")
+    private var nameField = NSTextField(labelWithString: "")
+    private var addressField = NSTextField(labelWithString: "")
     var id: Int?
 
     override init(frame frameRect: NSRect) {
@@ -24,9 +24,9 @@ final class ClientCell: NSTableCellView {
     }
 
     private func styleCell() {
-        name.font = NSFont.preferredFont(forTextStyle: .headline)
-        address.font = NSFont.preferredFont(forTextStyle: .body)
-        address.textColor = .secondaryLabelColor
+        nameField.font = NSFont.preferredFont(forTextStyle: .headline)
+        addressField.font = NSFont.preferredFont(forTextStyle: .body)
+        addressField.textColor = .secondaryLabelColor
     }
 
     private func setupLayout() {
@@ -36,8 +36,8 @@ final class ClientCell: NSTableCellView {
         stackview.distribution = .fill
         stackview.spacing = 3
 
-        stackview.addArrangedSubview(name)
-        stackview.addArrangedSubview(address)
+        stackview.addArrangedSubview(nameField)
+        stackview.addArrangedSubview(addressField)
 
         stackview.translatesAutoresizingMaskIntoConstraints = false
 
@@ -60,8 +60,8 @@ final class ClientCell: NSTableCellView {
     }
 
     public func configureClient(name: String, address: String, id: Int) {
-        self.name.stringValue = name
-        self.address.stringValue = address
+        self.nameField.stringValue = name
+        self.addressField.stringValue = address
         self.id = id
     }
 }

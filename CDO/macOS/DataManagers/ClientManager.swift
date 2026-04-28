@@ -55,10 +55,12 @@ extension ClientManager: NSTableViewDataSource, NSTableViewDelegate {
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.makeView(withIdentifier: ClientCell.identifier, owner: self)
-        as? ClientCell ?? ClientCell()
-        let client =  clients[row]
+        let cell = tableView.makeView(
+            withIdentifier: ClientCell.identifier,
+            owner: self
+        ) as? ClientCell ?? ClientCell()
 
+        let client =  clients[row]
         cell.configureClient(
             name: client.name,
             address: client.formattedAddress,

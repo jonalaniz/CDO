@@ -8,39 +8,55 @@
 import Cocoa
 
 final class NotesViewController: NSViewController {
-    private let notesView = NSTextView()
+    private let tableView = NSTableView()
     private var scrollView = NSScrollView.verticalScroller()
+    private var clientNotes = [ClientNote]()
 
     override func viewDidLoad() {
-        notesView.isEditable = false
-        notesView.drawsBackground = false
-        constrainUI()
+        setupTableView()
     }
 
-    private func constrainUI() {
-        scrollView.documentView = notesView
+    private func setupTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.style = .automatic
+        tableView.usesAutomaticRowHeights = true
+        tableView.backgroundColor = .clear
+        tableView.headerView = nil
+        tableView.floatsGroupRows = false
+        tableView.addTableColumn(NSTableColumn())
+
+        scrollView.documentView = tableView
         view.addSubview(scrollView)
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
-    func setNotes(_ string: String?) {
-        notesView.string = string ?? ""
+    func setNotes(_ clientNotes: [ClientNote]) {
+        self.clientNotes = clientNotes
+        tableView.reloadData()
         scrollView.documentView?.scroll(.zero)
     }
 }
 
-extension NSScrollView {
-    static func verticalScroller() -> NSScrollView {
-        let scrollView  = NSScrollView(frame: .zero)
-        scrollView.hasVerticalScroller = true
-        scrollView.drawsBackground = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
+extension NotesViewController: NSTableViewDataSource, NSTableViewDelegate {
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return clientNotes.count
+    }
+
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let cell = tableView.makeView(
+            withIdentifier: NoteCell.identifier,
+            owner: self
+        ) as? NoteCell ?? NoteCell()
+
+        let note = clientNotes[row]
+        cell.configureNote(note)
+        return cell
     }
 }

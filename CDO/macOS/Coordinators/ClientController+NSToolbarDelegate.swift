@@ -31,6 +31,8 @@ extension ClientCoordinator: NSToolbarDelegate {
         item.target = self
 
         switch itemIdentifier {
+        case .remindersItem:
+            return toolbarProvider.makeRemindersItem()
         case .newItem:
             item.action = #selector(newClient)
             item.toolTip = "New Client"
@@ -100,6 +102,7 @@ extension ClientCoordinator: NSToolbarDelegate {
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return [
             .flexibleSpace,
+            .remindersItem,
             .toggleSidebar,
             .sidebarTrackingSeparator,
             .flexibleSpace,

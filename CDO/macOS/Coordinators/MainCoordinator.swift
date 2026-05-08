@@ -52,7 +52,7 @@ final class CDOCoordinator: NSObject {
     func showClients() {
         guard let manager = cdo.clientManager else { return }
         if clientCoordinator == nil {
-            let coordinator = ClientCoordinator(manager: manager)
+            let coordinator = ClientCoordinator(manager: manager, toolbarProvider: self)
             coordinator.start()
             clientCoordinator = coordinator
         }
@@ -66,6 +66,10 @@ final class CDOCoordinator: NSObject {
         mainSplitView?.setContentItem(NSViewController())
         window?.toolbar?.delegate = self
         window?.toolbar?.reloadItems()
+    }
+
+    @objc func showRemindersPopover() {
+        print("popover clicked")
     }
 
     private func configureMainWindow() {
@@ -126,5 +130,17 @@ final class CDOCoordinator: NSObject {
 extension CDOCoordinator: SidebarDelegate {
     func selectionMade(_ source: SourceItem) {
         navigateToViewController(source)
+    }
+}
+
+extension CDOCoordinator: ToolbarItemProviding {
+    func makeRemindersItem() -> NSToolbarItem {
+        let item = NSToolbarItem(itemIdentifier: .remindersItem)
+        item.action = #selector(showRemindersPopover)
+        item.target = self
+        item.visibilityPriority = .high
+        item.isBordered = true
+        item.image = NSImage(systemSymbolName: "checklist", accessibilityDescription: "Reminders")
+        return item
     }
 }

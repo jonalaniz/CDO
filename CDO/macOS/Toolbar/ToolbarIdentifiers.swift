@@ -13,7 +13,8 @@ extension NSToolbar.Identifier {
 
 // Contains shared toolbar items
 extension NSToolbarItem.Identifier {
-    static let newItem = NSToolbarItem.Identifier("newItem")
+    static let remindersItem = NSToolbarItem.Identifier("RemindersItem")
+    static let newItem = NSToolbarItem.Identifier("NewItem")
     static let filterItem = NSToolbarItem.Identifier("FilterItem")
     static let primaryTrackingSeparator = NSToolbarItem.Identifier("PrimaryTrackingSeparator")
     static let secondaryTrackingSeparator = NSToolbarItem.Identifier("SecondaryTrackingSeparator")

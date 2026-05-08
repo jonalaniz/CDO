@@ -150,7 +150,7 @@ class ClientCollectionViewItem: NSCollectionViewItem {
     }
 
     private func constrainViews() {
-        titleLabel.font = NSFont.preferredFont(forTextStyle: .title1)
+        titleLabel.font = NSFont.systemFont(ofSize: 23, weight: .bold)
         button.bezelStyle = .glass
         button.borderShape = .circle
 
@@ -181,8 +181,4 @@ class ClientCollectionViewItem: NSCollectionViewItem {
             contentView.trailingAnchor.constraint(equalTo: glassView.trailingAnchor, constant: -8)
         ])
     }
-}
-
-final class PersonalInformationCollectionViewItem: ClientCollectionViewItem {
-
 }

@@ -12,6 +12,7 @@ final class ClientCoordinator: NSObject {
     private let tableViewController: ClientsTableViewController
     private let contentViewController: ClientViewController
     private let notesViewController: NotesViewController
+    let toolbarProvider: ToolbarItemProviding
 
     let rootViewController: ClientSplitViewController
 
@@ -19,8 +20,9 @@ final class ClientCoordinator: NSObject {
         return rootViewController.minimumWidth
     }
 
-    init(manager: ClientManager) {
+    init(manager: ClientManager, toolbarProvider: ToolbarItemProviding) {
         self.manager = manager
+        self.toolbarProvider = toolbarProvider
         tableViewController = ClientsTableViewController()
         contentViewController = ClientViewController()
         notesViewController = NotesViewController()
@@ -58,6 +60,17 @@ final class ClientCoordinator: NSObject {
 
     @objc func saveNote() {
         print("Save Note")
+
+        if true {
+
+        } else {
+
+        }
+
+        guard true else {
+            print("False")
+            return
+        }
     }
 }
 
@@ -83,5 +96,4 @@ extension ClientCoordinator: ClientManagerDelegate {
     func itemWasDeleted(id: Int) {
         // To be continued
     }
-
 }

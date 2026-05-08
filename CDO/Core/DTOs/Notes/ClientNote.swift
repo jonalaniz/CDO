@@ -12,4 +12,5 @@ struct ClientNote: Codable {
     let clientID: Int
     let date: Date
     let note: String
+    let author: String?
 }

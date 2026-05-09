@@ -29,9 +29,7 @@ final class ClientsTableViewController: NSViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .custom
         tableView.floatsGroupRows = false
-        tableView.addTableColumn(
-            NSTableColumn()
-        )
+        tableView.addTableColumn(.emptyColumn)
 
         let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = tableView

@@ -25,7 +25,7 @@ final class NoteCell: NSTableCellView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configureNote(_ note: ClientNote) {
+    func configureWith(_ note: ClientNote) {
         dateField.stringValue = note.date.formatted(
             date: .numeric,
             time: .standard
@@ -54,19 +54,29 @@ final class NoteCell: NSTableCellView {
         headerStack.orientation = .horizontal
         headerStack.distribution = .fill
 
-        let stack = NSStackView(views: [headerStack, noteField])
-        stack.orientation = .vertical
-        stack.alignment = .leading
-        stack.spacing = 4
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        let stackView = NSStackView(views: [headerStack, noteField])
+        stackView.orientation = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 6
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        addSubview(stack)
+        let line = NSBox()
+        line.boxType = .separator
+        line.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stackView)
+        addSubview(line)
 
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -9),
+
+            line.heightAnchor.constraint(equalToConstant: 1),
+            line.leftAnchor.constraint(equalTo: leftAnchor),
+            line.rightAnchor.constraint(equalTo: rightAnchor),
+            line.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

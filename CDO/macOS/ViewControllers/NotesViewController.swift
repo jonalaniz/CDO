@@ -24,7 +24,7 @@ final class NotesViewController: NSViewController {
         tableView.backgroundColor = .clear
         tableView.headerView = nil
         tableView.floatsGroupRows = false
-        tableView.addTableColumn(NSTableColumn())
+        tableView.addTableColumn(.emptyColumn)
 
         scrollView.documentView = tableView
         view.addSubview(scrollView)
@@ -56,7 +56,7 @@ extension NotesViewController: NSTableViewDataSource, NSTableViewDelegate {
         ) as? NoteCell ?? NoteCell()
 
         let note = clientNotes[row]
-        cell.configureNote(note)
+        cell.configureWith(note)
         return cell
     }
 }

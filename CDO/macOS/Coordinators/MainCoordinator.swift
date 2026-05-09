@@ -10,14 +10,18 @@ import Cocoa
 final class CDOCoordinator: NSObject {
     static let shared = CDOCoordinator()
 
+    // CDO
     private let cdo = CDO.shared
 
     // Child coordinators
     private var clientCoordinator: ClientCoordinator?
 
+    // View Controllers
     private var mainSplitView: MainSplitView?
     private var sidebarController = SidebarViewController()
     private var remindersController: RemindersController?
+
+    // Window Specific
     private var window: NSWindow?
 
     private override init() {}
@@ -99,8 +103,10 @@ final class CDOCoordinator: NSObject {
         window?.toolbar?.validateVisibleItems()
         window?.makeKeyAndOrderFront(nil)
 
-        // TODO: Configure the reminders controller
         remindersController = RemindersController()
+        guard let manager = cdo.remindersManager else { return }
+        remindersController?.tableView.dataSource = manager
+        remindersController?.tableView.delegate = manager
 
     }
 

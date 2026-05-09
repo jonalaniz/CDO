@@ -14,7 +14,7 @@ final class ReminderService: CRUDService {
     private let apiManager = APIManager.shared
     private var baseURLString: String
 
-    private init(baseURL: String) {
+    init(baseURL: String) {
         baseURLString = baseURL
     }
 

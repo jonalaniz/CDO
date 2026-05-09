@@ -30,15 +30,11 @@ final class ClientCell: NSTableCellView {
     }
 
     private func setupLayout() {
-        let stackview = NSStackView()
+        let stackview = NSStackView(views: [nameField, addressField])
         stackview.orientation = .vertical
         stackview.alignment = .leading
         stackview.distribution = .fill
         stackview.spacing = 3
-
-        stackview.addArrangedSubview(nameField)
-        stackview.addArrangedSubview(addressField)
-
         stackview.translatesAutoresizingMaskIntoConstraints = false
 
         let line = NSBox()
@@ -50,9 +46,10 @@ final class ClientCell: NSTableCellView {
 
         NSLayoutConstraint.activate([
             stackview.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stackview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            stackview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            stackview.trailingAnchor.constraint(equalTo: trailingAnchor),
 
+            line.heightAnchor.constraint(equalToConstant: 1),
             line.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             line.rightAnchor.constraint(equalTo: rightAnchor),
             line.bottomAnchor.constraint(equalTo: bottomAnchor)

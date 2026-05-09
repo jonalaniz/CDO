@@ -19,19 +19,17 @@ class RemindersController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        setupTableView()
     }
 
-    private func setupUI() {
+    private func setupTableView() {
         tableView.style = .plain
+        tableView.usesAutomaticRowHeights = true
         tableView.backgroundColor = .clear
         tableView.headerView = RemindersHeaderView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowSizeStyle = .custom
         tableView.floatsGroupRows = false
-        let column = NSTableColumn()
-        column.title = ""
-        tableView.addTableColumn(column)
+        tableView.addTableColumn(.emptyColumn)
 
         let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = tableView
@@ -48,35 +46,5 @@ class RemindersController: NSViewController {
 
     @objc func tabClicked(_ sender: NSSegmentedControl) {
         print(sender.selectedSegment)
-    }
-}
-
-final class RemindersHeaderView: NSTableHeaderView {
-    let headerLabel = NSTextField(labelWithString: "Reminders")
-
-    init() {
-        let height = NSFont.preferredFont(
-            forTextStyle: .headline
-        ).boundingRectForFont.size.height
-        super.init(frame: .init(x: 0, y: 0, width: 0, height: height * 2))
-        setupUI()
-    }
-
-    private func setupUI() {
-        layer?.backgroundColor = .clear
-        headerLabel.translatesAutoresizingMaskIntoConstraints = false
-        headerLabel.font = NSFont.preferredFont(forTextStyle: .headline)
-        headerLabel.alignment = .center
-        addSubview(headerLabel)
-
-        NSLayoutConstraint.activate([
-            headerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

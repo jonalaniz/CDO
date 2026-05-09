@@ -22,7 +22,6 @@ final class RemindersManager: NSObject {
         fetchReminders()
     }
 
-
     // MARK: - Public API
     func fetchReminders() {
         Task {
@@ -52,22 +51,24 @@ final class RemindersManager: NSObject {
 
 // MARK: - NSTableViewDelegate & NSTableViewDataSource
 
-extension RemindersManager {
+extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         reminders.count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let cell = tableView.makeView(
+            withIdentifier: ReminderCell.identifier,
+            owner: self
+        ) as? ReminderCell ?? ReminderCell()
 
-        return NSView()
+        let reminder = reminders[row]
+        cell.configureWith(reminder)
+
+        return cell
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
 //        delegate?.didSelect()
     }
-}
-
-final class ReminderCell: NSTableCellView {
-    static var identifier = NSUserInterfaceItemIdentifier("ReminderCell")
-//    private var
 }

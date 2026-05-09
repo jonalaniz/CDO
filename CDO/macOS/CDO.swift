@@ -14,12 +14,13 @@ final class CDO {
     private var baseURL: String
 
     private lazy var clientService = ClientService(baseURL: baseURL)
-    private lazy var reminderService = ClientService(baseURL: baseURL)
+    private lazy var reminderService = ReminderService(baseURL: baseURL)
 
     private let counselorService = CounselorService.shared
     private let employerService = EmployerService.shared
 
     var clientManager: ClientManager?
+    var remindersManager: RemindersManager?
 
     private let configurationManager = ConfigurationManager.shared
 
@@ -43,6 +44,7 @@ final class CDO {
         reminderService.updateBaseAddress(secret)
 
         clientManager = ClientManager(service: clientService)
+        remindersManager = RemindersManager(service: reminderService)
     }
 
 }

@@ -17,6 +17,7 @@ final class CDOCoordinator: NSObject {
 
     private var mainSplitView: MainSplitView?
     private var sidebarController = SidebarViewController()
+    private var remindersController: RemindersController?
     private var window: NSWindow?
 
     private override init() {}
@@ -68,8 +69,14 @@ final class CDOCoordinator: NSObject {
         window?.toolbar?.reloadItems()
     }
 
-    @objc func showRemindersPopover() {
-        print("popover clicked")
+    @objc func showRemindersPopover(_ sender: NSToolbarItem) {
+        guard let controller = remindersController else { return }
+
+        let popover = NSPopover()
+        popover.contentViewController = controller
+        popover.behavior = .transient
+        popover.contentSize = .init(width: 300, height: 500)
+        popover.show(relativeTo: sender)
     }
 
     private func configureMainWindow() {
@@ -91,6 +98,10 @@ final class CDOCoordinator: NSObject {
         window?.toolbar = toolbar
         window?.toolbar?.validateVisibleItems()
         window?.makeKeyAndOrderFront(nil)
+
+        // TODO: Configure the reminders controller
+        remindersController = RemindersController()
+
     }
 
     private func resizeWindowIfNeeded(_ width: CGFloat) {

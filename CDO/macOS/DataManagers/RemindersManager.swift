@@ -7,30 +7,29 @@
 
 import AppKit
 
-final class RemindersManager {
-    // MARK: - Shared Instance
-    static let shared = RemindersManager()
-
-    // MARK: - Properties
-    private let service = ReminderService.shared
+final class RemindersManager: NSObject {
+    weak var delegate: (any ClientManagerDelegate)?
+    private let service: ReminderService
     private var reminders = [Reminder]()
+
     private var filteredReminders: [Reminder] {
         reminders.filter { !$0.complete }
     }
-    private var sortedByColumn: Column?
-    var isFiltered = false
 
-    // MARK: - Public API
-    func initialize() async {
+    init(service: ReminderService) {
+        self.service = service
+        super.init()
         fetchReminders()
     }
 
+
+    // MARK: - Public API
     func fetchReminders() {
         Task {
             do {
                 reminders = try await service.fetchAll()
                     .sorted {
-                    $0.id < $1.id
+                    $0.date < $1.date
                 }
 
                 for reminder in reminders {
@@ -49,61 +48,26 @@ final class RemindersManager {
             }
         }
     }
-
-    func idForSelectedRow(_ row: Int) -> Int {
-        isFiltered ? filteredReminders[row].id : reminders[row].id
-    }
 }
 
 // MARK: - NSTableViewDelegate & NSTableViewDataSource
 
 extension RemindersManager {
-    private enum Column: String, CaseIterable {
-        case clentName = "ClientNameID"
-        case actionDate = "ActionDateID"
-        case description = "DescriptionID"
-
-        var identifier: NSUserInterfaceItemIdentifier {
-            .init(rawValue)
-        }
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        reminders.count
     }
 
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        isFiltered ? filteredReminders.count : reminders.count
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+
+        return NSView()
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
 //        delegate?.didSelect()
     }
+}
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        guard
-            let tableColumn = tableColumn,
-            let column = Column(rawValue: tableColumn.identifier.rawValue)
-        else { return nil }
-
-        let reminder = isFiltered ? filteredReminders[row] : reminders[row]
-
-        guard let view = tableView.makeView(
-            withIdentifier: column.identifier, owner: self
-        ) as? NSTableCellView else {
-            print("Cannot cast CellView")
-            return nil
-        }
-
-        switch column {
-        case .clentName:
-            view.textField?.stringValue = reminder.clientName ?? ""
-        case .actionDate:
-            view.textField?.stringValue = reminder.date
-                .formatted(date: .numeric, time: .omitted)
-        case .description:
-            view.textField?.stringValue = reminder.description
-            view.toolTip = reminder.description
-        }
-
-        view.layer?.opacity = reminder.complete ? 0.5 : 1.0
-
-        return view
-    }
+final class ReminderCell: NSTableCellView {
+    static var identifier = NSUserInterfaceItemIdentifier("ReminderCell")
+//    private var
 }

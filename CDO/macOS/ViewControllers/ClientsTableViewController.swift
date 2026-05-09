@@ -11,6 +11,7 @@ final class ClientsTableViewController: NSViewController {
     let tableView = NSTableView()
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         setupTableView()
     }
 

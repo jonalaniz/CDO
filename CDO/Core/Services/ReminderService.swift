@@ -8,15 +8,15 @@
 import Foundation
 
 final class ReminderService: CRUDService {
-    static let shared = ReminderService()
-
     typealias Model = Reminder
     typealias Detail = Reminder
 
     private let apiManager = APIManager.shared
-    private var baseURLString = ""
+    private var baseURLString: String
 
-    private init() {}
+    private init(baseURL: String) {
+        baseURLString = baseURL
+    }
 
     func fetchAll() async throws -> [Model] {
         let fullAddress = URL(string: baseURLString + Endpoint.reminders.path)!

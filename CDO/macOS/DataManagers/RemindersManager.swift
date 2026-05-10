@@ -63,7 +63,7 @@ extension RemindersManager: NSTableViewDelegate, NSTableViewDataSource {
         ) as? ReminderCell ?? ReminderCell()
 
         let reminder = reminders[row]
-        cell.configureWith(reminder)
+        cell.configure(with: reminder)
 
         return cell
     }

@@ -7,58 +7,46 @@
 
 import Cocoa
 
-final class ClientCell: NSTableCellView {
-    static var identifier = NSUserInterfaceItemIdentifier("ClientCell")
+final class ClientCell: BaseCell<ClientSummary> {
+    static let identifier = NSUserInterfaceItemIdentifier("ClientCell")
+
     private var nameField = NSTextField(labelWithString: "")
     private var addressField = NSTextField(labelWithString: "")
-    var id: Int?
+    private(set) var id: Int?
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        styleCell()
-        setupLayout()
+    override func styleCell() {
+        applyHeadingStyle(field: nameField)
+        applyBodyStyle(field: addressField)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    override func setupLayout() {
+        let stackView = NSStackView(views: [nameField, addressField])
+        stackView.orientation = .vertical
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+        stackView.spacing = 3
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-    private func styleCell() {
-        nameField.font = NSFont.preferredFont(forTextStyle: .headline)
-        addressField.font = NSFont.preferredFont(forTextStyle: .body)
-        addressField.textColor = .secondaryLabelColor
-    }
+        let line = separator()
 
-    private func setupLayout() {
-        let stackview = NSStackView(views: [nameField, addressField])
-        stackview.orientation = .vertical
-        stackview.alignment = .leading
-        stackview.distribution = .fill
-        stackview.spacing = 3
-        stackview.translatesAutoresizingMaskIntoConstraints = false
-
-        let line = NSBox()
-        line.boxType = .separator
-        line.translatesAutoresizingMaskIntoConstraints = false
-
-        addSubview(stackview)
+        addSubview(stackView)
         addSubview(line)
 
         NSLayoutConstraint.activate([
-            stackview.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stackview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            stackview.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
 
             line.heightAnchor.constraint(equalToConstant: 1),
-            line.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
-            line.rightAnchor.constraint(equalTo: rightAnchor),
-            line.bottomAnchor.constraint(equalTo: bottomAnchor)
+            line.bottomAnchor.constraint(equalTo: bottomAnchor),
+            line.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            line.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 
-    public func configureClient(name: String, address: String, id: Int) {
-        self.nameField.stringValue = name
-        self.addressField.stringValue = address
-        self.id = id
+    override func configure(with client: ClientSummary) {
+        nameField.stringValue = client.name
+        addressField.stringValue = client.formattedAddress
+        id = client.id
     }
 }

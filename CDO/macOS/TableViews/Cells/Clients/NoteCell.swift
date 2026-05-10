@@ -7,49 +7,26 @@
 
 import Cocoa
 
-final class NoteCell: NSTableCellView {
-    static var identifier = NSUserInterfaceItemIdentifier("NoteCell")
+final class NoteCell: BaseCell<ClientNote> {
+    static let identifier = NSUserInterfaceItemIdentifier("NoteCell")
 
     private var dateField = NSTextField(labelWithString: "")
     private var noteField = NSTextField(labelWithString: "")
     private var authorField = NSTextField(labelWithString: "")
-    private var id: Int?
+    private(set) var id: Int?
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        styleCell()
-        setupLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func configureWith(_ note: ClientNote) {
-        dateField.stringValue = note.date.formatted(
-            date: .numeric,
-            time: .standard
-        )
-        authorField.stringValue = note.author ?? ""
-        noteField.stringValue = note.note
-        id = note.id
-    }
-
-    private func styleCell() {
-        dateField.font = NSFont.preferredFont(forTextStyle: .headline)
-        dateField.textColor = .secondaryLabelColor
-
-        authorField.font = NSFont.preferredFont(forTextStyle: .headline)
-        authorField.textColor = .controlAccentColor
-        authorField.alignment = .right
+    override func styleCell() {
+        applyHeadingStyle(field: dateField)
+        applyHeadingStyle(
+            field: authorField,
+            alignment: .right,
+            color: .controlAccentColor)
+        applyBodyStyle(field: noteField)
 
         noteField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        noteField.font = NSFont.preferredFont(forTextStyle: .body)
-        noteField.maximumNumberOfLines = 0
-        noteField.lineBreakMode = .byWordWrapping
     }
 
-    private func setupLayout() {
+    override func setupLayout() {
         let headerStack = NSStackView(views: [dateField, NSView(), authorField])
         headerStack.orientation = .horizontal
         headerStack.distribution = .fill
@@ -60,23 +37,31 @@ final class NoteCell: NSTableCellView {
         stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        let line = NSBox()
-        line.boxType = .separator
-        line.translatesAutoresizingMaskIntoConstraints = false
+        let line = separator()
 
         addSubview(stackView)
         addSubview(line)
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -9),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -9),
 
             line.heightAnchor.constraint(equalToConstant: 1),
-            line.leftAnchor.constraint(equalTo: leftAnchor),
-            line.rightAnchor.constraint(equalTo: rightAnchor),
-            line.bottomAnchor.constraint(equalTo: bottomAnchor)
+            line.bottomAnchor.constraint(equalTo: bottomAnchor),
+            line.leadingAnchor.constraint(equalTo: leadingAnchor),
+            line.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
+    }
+
+    override func configure(with note: ClientNote) {
+        dateField.stringValue = note.date.formatted(
+            date: .numeric,
+            time: .standard
+        )
+        authorField.stringValue = note.author ?? ""
+        noteField.stringValue = note.note
+        id = note.id
     }
 }

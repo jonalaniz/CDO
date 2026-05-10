@@ -56,7 +56,7 @@ extension NotesViewController: NSTableViewDataSource, NSTableViewDelegate {
         ) as? NoteCell ?? NoteCell()
 
         let note = clientNotes[row]
-        cell.configureWith(note)
+        cell.configure(with: note)
         return cell
     }
 }

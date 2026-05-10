@@ -61,11 +61,7 @@ extension ClientManager: NSTableViewDataSource, NSTableViewDelegate {
         ) as? ClientCell ?? ClientCell()
 
         let client =  clients[row]
-        cell.configureClient(
-            name: client.name,
-            address: client.formattedAddress,
-            id: client.id
-        )
+        cell.configure(with: client)
 
         return cell
     }

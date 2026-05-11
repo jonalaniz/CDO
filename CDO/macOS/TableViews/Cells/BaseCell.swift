@@ -11,7 +11,7 @@ class BaseCell<Model: Codable>: NSTableCellView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         styleCell()
-        setupLayout()
+        layoutCell()
     }
 
     required init?(coder: NSCoder) {
@@ -20,7 +20,7 @@ class BaseCell<Model: Codable>: NSTableCellView {
 
     func styleCell() {}
 
-    func setupLayout() {}
+    func layoutCell() {}
 
     func configure(with item: Model) {}
 

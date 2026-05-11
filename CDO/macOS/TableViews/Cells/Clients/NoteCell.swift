@@ -26,7 +26,7 @@ final class NoteCell: BaseCell<ClientNote> {
         noteField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 
-    override func setupLayout() {
+    override func layoutCell() {
         let headerStack = NSStackView(views: [dateField, NSView(), authorField])
         headerStack.orientation = .horizontal
         headerStack.distribution = .fill

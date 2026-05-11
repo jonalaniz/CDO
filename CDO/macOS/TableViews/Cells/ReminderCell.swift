@@ -26,7 +26,7 @@ final class ReminderCell: BaseCell<Reminder> {
         reminderField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 
-    override func setupLayout() {
+    override func layoutCell() {
         let headerStack = NSStackView(views: [clientField, NSView(), dateField])
         headerStack.orientation = .horizontal
         headerStack.distribution = .fill

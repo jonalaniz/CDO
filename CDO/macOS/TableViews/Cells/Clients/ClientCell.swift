@@ -19,7 +19,7 @@ final class ClientCell: BaseCell<ClientSummary> {
         applyBodyStyle(field: addressField)
     }
 
-    override func setupLayout() {
+    override func layoutCell() {
         let stackView = NSStackView(views: [nameField, addressField])
         stackView.orientation = .vertical
         stackView.alignment = .leading

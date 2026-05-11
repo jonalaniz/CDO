@@ -8,17 +8,47 @@
 import Cocoa
 
 final class ClientViewController: NSViewController {
+    private var client: ClientDetail?
     let collectionView = NSCollectionView()
-    var client: ClientDetail?
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
-        setupUI()
-        constrainUI()
+        super.viewDidLoad()
+        setupCollectionView()
     }
 
     override func viewDidLayout() {
         super.viewDidLayout()
         updateItemSize()
+    }
+
+    // MARK: - Setup
+
+    private func setupCollectionView() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+
+        let layout = NSCollectionViewFlowLayout()
+        layout.itemSize = NSSize(width: 280, height: 400)
+        layout.minimumInteritemSpacing = 12
+        layout.minimumLineSpacing = 12
+        layout.sectionInset = NSEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        collectionView.collectionViewLayout = layout
+
+        let scrollView = NSScrollView.verticalScroller()
+        scrollView.documentView = collectionView
+
+        view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
+        ])
+
+        collectionView.isHidden = true
     }
 
     private func updateItemSize() {
@@ -40,33 +70,7 @@ final class ClientViewController: NSViewController {
         layout.itemSize = NSSize(width: clampedWidth, height: 400)
     }
 
-    private func setupUI() {
-        let layout = NSCollectionViewFlowLayout()
-        layout.itemSize = NSSize(width: 280, height: 400)
-        layout.minimumInteritemSpacing = 12
-        layout.minimumLineSpacing = 12
-        layout.sectionInset = NSEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-
-        collectionView.collectionViewLayout = layout
-        collectionView.dataSource = self
-        collectionView.delegate = self
-    }
-
-    private func constrainUI() {
-        let scrollView = NSScrollView.verticalScroller()
-        scrollView.documentView = collectionView
-
-        view.addSubview(scrollView)
-
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
-        ])
-
-        collectionView.isHidden = true
-    }
+    // MARK: - Public API
 
     func setClient(_ client: ClientDetail) {
         self.client = client
@@ -91,94 +95,8 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
         itemForRepresentedObjectAt indexPath: IndexPath)
     -> NSCollectionViewItem {
         guard let card = ClientCard(rawValue: indexPath.item) else { return NSCollectionViewItem() }
-        let cell = ClientCollectionViewItem()
+        let cell = ClientCardItem()
         cell.titleLabel.stringValue = card.title
         return cell
-    }
-}
-
-enum ClientCard: Int, CaseIterable {
-    case personal
-    case contact
-    case caseInfo
-    case conditions
-    case sas
-    case employmentProfile
-    case placements
-    case checklist
-
-    var title: String {
-        switch self {
-        case .personal: "Personal information"
-        case .contact: "Contact Information"
-        case .caseInfo: "Case Information"
-        case .conditions: "Conditions"
-        case .sas: "Service Authorizations"
-        case .employmentProfile: "Employment Profile"
-        case .placements: "Placements"
-        case .checklist: "Checklist"
-        }
-    }
-}
-
-class ClientCollectionViewItem: NSCollectionViewItem {
-    let glassView = NSGlassEffectView()
-    let contentView = NSGlassEffectView()
-    let button = NSButton(
-        image: NSImage(systemSymbolName: "pencil", accessibilityDescription: "edit") ?? NSImage(),
-        target: nil,
-        action: nil
-    )
-    let titleLabel = NSTextField(labelWithString: "Test Title Label")
-    let height = NSFont.preferredFont(forTextStyle: .title1).boundingRectForFont.height
-
-    override func loadView() {
-        layoutGlassView()
-        constrainViews()
-    }
-
-    private func layoutGlassView() {
-        view = NSView()
-        view.addSubview(glassView)
-        glassView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            glassView.topAnchor.constraint(equalTo: view.topAnchor),
-            glassView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            glassView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            glassView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-    }
-
-    private func constrainViews() {
-        titleLabel.font = NSFont.systemFont(ofSize: 23, weight: .bold)
-        button.bezelStyle = .glass
-        button.borderShape = .circle
-
-        contentView.style = .clear
-
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-
-        glassView.addSubview(titleLabel)
-        glassView.addSubview(button)
-        glassView.addSubview(contentView)
-
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: glassView.topAnchor, constant: 8),
-            button.trailingAnchor.constraint(equalTo: glassView.trailingAnchor, constant: -8),
-            button.heightAnchor.constraint(equalToConstant: height),
-            button.widthAnchor.constraint(equalToConstant: height),
-
-            titleLabel.topAnchor.constraint(equalTo: glassView.topAnchor, constant: 8),
-            titleLabel.leadingAnchor.constraint(equalTo: glassView.leadingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -8),
-            titleLabel.heightAnchor.constraint(equalToConstant: height),
-
-            contentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            contentView.bottomAnchor.constraint(equalTo: glassView.bottomAnchor, constant: -8),
-            contentView.leadingAnchor.constraint(equalTo: glassView.leadingAnchor, constant: 8),
-            contentView.trailingAnchor.constraint(equalTo: glassView.trailingAnchor, constant: -8)
-        ])
     }
 }

@@ -17,6 +17,8 @@ final class SidebarViewController: NSViewController {
 
     weak var delegate: SidebarDelegate?
 
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = CDOCoordinator.shared
@@ -26,6 +28,8 @@ final class SidebarViewController: NSViewController {
     override func viewDidAppear() {
         selectDefaultItem()
     }
+
+    // MARK: - Setup
 
     private func setupOutlineView() {
         outlineView.register(
@@ -38,30 +42,20 @@ final class SidebarViewController: NSViewController {
             forIdentifier: SourceItem.clients.identifier
         )
 
+        // Wire Up OutlineView
+        outlineView.dataSource = self
+        outlineView.delegate = self
+
         // Style OutlineView
         outlineView.style = .sourceList
         outlineView.headerView = nil
         outlineView.rowSizeStyle = .default
         outlineView.floatsGroupRows = false
+        outlineView.addTableColumn(.emptyColumn)
 
-        // Wire Up OutlineView
-        outlineView.dataSource = self
-        outlineView.delegate = self
-
-        // Create ScrollView to contain OutlineView
-        let scrollView = NSScrollView(frame: .zero)
-        scrollView.hasVerticalScroller = true
-        scrollView.drawsBackground = false
+        let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = outlineView
-
-        // Add Column
-        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Column"))
-        outlineView.addTableColumn(column)
-        outlineView.outlineTableColumn = column
-
         view.addSubview(scrollView)
-
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),

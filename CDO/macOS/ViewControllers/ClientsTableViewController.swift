@@ -10,30 +10,27 @@ import Cocoa
 final class ClientsTableViewController: NSViewController {
     let tableView = NSTableView()
 
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
     }
 
     override func viewDidAppear() {
+        super.viewDidAppear()
         setTitle()
     }
 
-    private func setTitle() {
-        guard let window = view.window else { return }
-        window.subtitle = "\(tableView.numberOfRows) clients"
-    }
+    // MARK: - Setup
 
     private func setupTableView() {
         tableView.style = .inset
         tableView.headerView = nil
-        tableView.rowSizeStyle = .custom
-        tableView.floatsGroupRows = false
         tableView.addTableColumn(.emptyColumn)
 
         let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = tableView
-
         view.addSubview(scrollView)
 
         NSLayoutConstraint.activate([
@@ -42,5 +39,17 @@ final class ClientsTableViewController: NSViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+    }
+
+    private func setTitle() {
+        guard let window = view.window else { return }
+
+        let subtitle = switch tableView.numberOfRows {
+        case 0: "No clients"
+        case 1: "One client"
+        default: "\(tableView.numberOfRows) clients"
+        }
+
+        window.subtitle = subtitle
     }
 }

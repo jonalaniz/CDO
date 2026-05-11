@@ -7,7 +7,7 @@
 
 import Cocoa
 
-final class PersonalInformationCollectionViewItem: ClientCollectionViewItem {
+final class PersonalInformationCollectionViewItem: ClientCardItem {
 //    let glassView = NSGlassEffectView()
 //    let button = NSButton(
 //        image: NSImage(systemSymbolName: "pencil", accessibilityDescription: "edit") ?? NSImage(),

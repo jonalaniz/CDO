@@ -17,23 +17,24 @@ class RemindersController: NSViewController {
 
     let tableView = NSTableView()
 
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
     }
 
+    // MARK: - Setup
+
     private func setupTableView() {
         tableView.style = .plain
+        tableView.headerView = RemindersHeaderView()
         tableView.usesAutomaticRowHeights = true
         tableView.backgroundColor = .clear
-        tableView.headerView = RemindersHeaderView()
-        tableView.rowSizeStyle = .custom
-        tableView.floatsGroupRows = false
         tableView.addTableColumn(.emptyColumn)
 
         let scrollView = NSScrollView.verticalScroller()
         scrollView.documentView = tableView
-
         view.addSubview(scrollView)
 
         NSLayoutConstraint.activate([
@@ -47,4 +48,8 @@ class RemindersController: NSViewController {
     @objc func tabClicked(_ sender: NSSegmentedControl) {
         print(sender.selectedSegment)
     }
+}
+
+extension NSTableView {
+
 }

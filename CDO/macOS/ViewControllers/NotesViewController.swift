@@ -8,22 +8,26 @@
 import Cocoa
 
 final class NotesViewController: NSViewController {
-    private let tableView = NSTableView()
-    private var scrollView = NSScrollView.verticalScroller()
     private var clientNotes = [ClientNote]()
+    private var scrollView = NSScrollView.verticalScroller()
+    private let tableView = NSTableView()
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         setupTableView()
     }
+
+    // MARK: - Setup
 
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.style = .automatic
+        tableView.headerView = nil
         tableView.usesAutomaticRowHeights = true
         tableView.backgroundColor = .clear
-        tableView.headerView = nil
-        tableView.floatsGroupRows = false
         tableView.addTableColumn(.emptyColumn)
 
         scrollView.documentView = tableView
@@ -36,6 +40,8 @@ final class NotesViewController: NSViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
+
+    // MARK: - Public API
 
     func setNotes(_ clientNotes: [ClientNote]) {
         self.clientNotes = clientNotes

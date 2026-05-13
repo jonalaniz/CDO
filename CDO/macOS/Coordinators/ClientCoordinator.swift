@@ -60,17 +60,6 @@ final class ClientCoordinator: NSObject {
 
     @objc func saveNote() {
         print("Save Note")
-
-        if true {
-
-        } else {
-
-        }
-
-        guard true else {
-            print("False")
-            return
-        }
     }
 }
 

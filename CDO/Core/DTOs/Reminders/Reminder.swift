@@ -17,4 +17,12 @@ struct Reminder: Codable {
 
     // ClientName is a computed property
     let clientName: String?
+
+    // Computed Properties
+    var formattedDate: String {
+        return date.formatted(
+            date: .numeric,
+            time: .omitted
+        )
+    }
 }

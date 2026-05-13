@@ -68,4 +68,36 @@ struct ClientDetail: Codable {
     let race: String?
     let fluentLanguages: String?
     let premiums: String?
+
+    // Computed Properties
+
+    var formattedAddress: String {
+        let street = [
+            address1,
+            address2
+        ].compactMap { $0 }.joined(separator: " ")
+
+        let addressLines = [
+            street.isEmpty ? nil : street,
+            "\(city), \(state) \(zip ?? "")"
+        ].compactMap { $0 }
+
+        return addressLines.joined(separator: "\n")
+    }
+
+    var formattedDob: String {
+        return dob?.formatted(
+            date: .numeric,
+            time: .omitted
+        ) ?? ""
+    }
+
+    var formattedSSN: String {
+        guard var string = ssn else { return "" }
+        guard string.count == 9 else { return string }
+
+        string.insert("-", at: string.index(string.startIndex, offsetBy: 5))
+        string.insert("-", at: string.index(string.startIndex, offsetBy: 3))
+        return string
+    }
 }

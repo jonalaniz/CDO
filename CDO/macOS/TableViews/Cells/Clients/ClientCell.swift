@@ -16,7 +16,9 @@ final class ClientCell: BaseCell<ClientSummary> {
 
     override func styleCell() {
         applyHeadingStyle(field: nameField)
-        applyBodyStyle(field: addressField)
+        applyBodyStyle(
+            field: addressField,
+            color: .secondaryLabelColor)
     }
 
     override func layoutCell() {

@@ -56,12 +56,10 @@ final class ReminderCell: BaseCell<Reminder> {
     }
 
     override func configure(with reminder: Reminder) {
-        dateField.stringValue = reminder.date.formatted(
-            date: .numeric,
-            time: .omitted
-        )
+        dateField.stringValue = reminder.formattedDate
         clientField.stringValue = reminder.clientName ?? ""
         reminderField.stringValue = reminder.description
         id = reminder.id
     }
 }
+

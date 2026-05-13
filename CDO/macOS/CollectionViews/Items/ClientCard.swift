@@ -33,7 +33,7 @@ enum ClientCard: Int, CaseIterable {
 
 class ClientCardItem: NSCollectionViewItem {
     let glassView = NSGlassEffectView()
-    let contentView = NSGlassEffectView()
+    let contentView = NSView()
     let button = NSButton(
         image: NSImage(systemSymbolName: "pencil", accessibilityDescription: "edit") ?? NSImage(),
         target: nil,
@@ -64,15 +64,23 @@ class ClientCardItem: NSCollectionViewItem {
         button.bezelStyle = .glass
         button.borderShape = .circle
 
-        contentView.style = .clear
+        // View for outline, embed the contentview inside it with padding
+        let outlineView = NSView()
+        outlineView.wantsLayer = true
+        outlineView.layer?.backgroundColor = .clear
+        outlineView.layer?.cornerRadius = 4
+        outlineView.layer?.borderColor = NSColor.separatorColor.cgColor
+        outlineView.layer?.borderWidth = 1
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
+        outlineView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
 
         glassView.addSubview(titleLabel)
         glassView.addSubview(button)
-        glassView.addSubview(contentView)
+        glassView.addSubview(outlineView)
+        outlineView.addSubview(contentView)
 
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: glassView.topAnchor, constant: 8),
@@ -85,10 +93,15 @@ class ClientCardItem: NSCollectionViewItem {
             titleLabel.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -8),
             titleLabel.heightAnchor.constraint(equalToConstant: height),
 
-            contentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            contentView.bottomAnchor.constraint(equalTo: glassView.bottomAnchor, constant: -8),
-            contentView.leadingAnchor.constraint(equalTo: glassView.leadingAnchor, constant: 8),
-            contentView.trailingAnchor.constraint(equalTo: glassView.trailingAnchor, constant: -8)
+            outlineView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            outlineView.bottomAnchor.constraint(equalTo: glassView.bottomAnchor, constant: -8),
+            outlineView.leadingAnchor.constraint(equalTo: glassView.leadingAnchor, constant: 8),
+            outlineView.trailingAnchor.constraint(equalTo: glassView.trailingAnchor, constant: -8),
+
+            contentView.topAnchor.constraint(equalTo: outlineView.topAnchor, constant: 8),
+            contentView.bottomAnchor.constraint(equalTo: outlineView.bottomAnchor, constant: -8),
+            contentView.leadingAnchor.constraint(equalTo: outlineView.leadingAnchor, constant: 8),
+            contentView.trailingAnchor.constraint(equalTo: outlineView.trailingAnchor, constant: -8)
         ])
     }
 }

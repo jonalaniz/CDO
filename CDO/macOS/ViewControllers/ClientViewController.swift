@@ -58,7 +58,7 @@ final class ClientViewController: NSViewController {
         let spacing = layout.minimumInteritemSpacing
         let availableWidth = collectionView.bounds.width - insets
         let minWidth: CGFloat = 250
-        let maxWidth: CGFloat = 300
+        let maxWidth: CGFloat = 320
 
         // How many columns fit at minimum width
         let columns = floor((availableWidth + spacing) / (minWidth + spacing))
@@ -67,7 +67,7 @@ final class ClientViewController: NSViewController {
         // Clamp to max
         let clampedWidth = min(itemWidth, maxWidth)
 
-        layout.itemSize = NSSize(width: clampedWidth, height: 400)
+        layout.itemSize = NSSize(width: clampedWidth, height: 330)
     }
 
     // MARK: - Public API
@@ -94,9 +94,22 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
         _ collectionView: NSCollectionView,
         itemForRepresentedObjectAt indexPath: IndexPath)
     -> NSCollectionViewItem {
-        guard let card = ClientCard(rawValue: indexPath.item) else { return NSCollectionViewItem() }
-        let cell = ClientCardItem()
-        cell.titleLabel.stringValue = card.title
-        return cell
+        guard
+            let card = ClientCard(rawValue: indexPath.item),
+            let unwrappedClient = client
+        else { return NSCollectionViewItem() }
+
+        switch card {
+        case .personal:
+            let cell = PersonalInformationCollectionViewItem()
+            cell.titleLabel.stringValue = card.title
+            cell.configure(with: unwrappedClient)
+            return cell
+        default:
+            let cell = ClientCardItem()
+            cell.titleLabel.stringValue = card.title
+            return cell
+        }
+
     }
 }

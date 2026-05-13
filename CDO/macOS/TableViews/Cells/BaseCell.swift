@@ -34,9 +34,12 @@ class BaseCell<Model: Codable>: NSTableCellView {
         field.textColor = color
     }
 
-    func applyBodyStyle(field: NSTextField) {
+    func applyBodyStyle(
+        field: NSTextField,
+        color: NSColor = .labelColor
+    ) {
         field.font = .preferredFont(forTextStyle: .body)
-        field.textColor = .labelColor
+        field.textColor = color
         field.lineBreakMode = .byWordWrapping
         field.maximumNumberOfLines = 0
     }

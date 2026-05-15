@@ -105,6 +105,16 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
             cell.titleLabel.stringValue = card.title
             cell.configure(with: unwrappedClient)
             return cell
+        case .contact:
+            let cell = ContactInformationItem()
+            cell.titleLabel.stringValue = card.title
+            cell.configure(with: unwrappedClient)
+            return cell
+        case .caseInfo:
+            let cell = CaseInformationItem()
+            cell.titleLabel.stringValue = card.title
+            cell.configure(with: unwrappedClient)
+            return cell
         default:
             let cell = ClientCardItem()
             cell.titleLabel.stringValue = card.title

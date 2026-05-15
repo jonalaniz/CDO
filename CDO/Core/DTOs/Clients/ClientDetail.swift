@@ -85,11 +85,30 @@ struct ClientDetail: Codable {
         return addressLines.joined(separator: "\n")
     }
 
-    var formattedDob: String {
-        return dob?.formatted(
-            date: .numeric,
-            time: .omitted
-        ) ?? ""
+    var formattedCaseLoad: String {
+        guard let caseLoadID = counselorReference?.caseLoadID
+        else { return ""}
+        return String(caseLoadID)
+    }
+
+    var formattedCounselor: String {
+        guard let counselor = counselorReference
+        else { return "" }
+
+        return [counselor.name, counselor.phone, counselor.email]
+            .compactMap { $0 }
+            .joined(separator: "\n")
+    }
+
+    var formattedDob: String { formatted(dob) ?? "" }
+
+    var formattedSecretary: String {
+        guard let counselor = counselorReference
+        else { return "" }
+
+        return [counselor.secretaryName, counselor.secretaryEmail]
+            .compactMap { $0 }
+            .joined(separator: "\n")
     }
 
     var formattedSSN: String {
@@ -99,5 +118,12 @@ struct ClientDetail: Codable {
         string.insert("-", at: string.index(string.startIndex, offsetBy: 5))
         string.insert("-", at: string.index(string.startIndex, offsetBy: 3))
         return string
+    }
+
+    var formattedStartDate: String { formatted(startDate) ?? "" }
+
+    private func formatted(_ date: Date?) -> String? {
+        guard let date = date else { return nil }
+        return date.formatted(date: .numeric, time: .omitted)
     }
 }

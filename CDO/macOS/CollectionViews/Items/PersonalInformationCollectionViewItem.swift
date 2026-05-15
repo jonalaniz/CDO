@@ -17,24 +17,23 @@ final class PersonalInformationCollectionViewItem: ClientCardItem {
     private let educationField = LabelPairView(header: "Education")
 
     override func viewDidLoad() {
-        let row0 = NSStackView(views: [dobField, dlField, ssnField])
-        row0.orientation = .horizontal
-        row0.distribution = .fillEqually
-        row0.spacing = 4
-        row0.translatesAutoresizingMaskIntoConstraints = false
+        let row0 = makeStackView(
+            views: [dobField, dlField, ssnField],
+            orientation: .horizontal,
+            distribution: .fillEqually,
+            spacing: 4)
 
-        let row1 = NSStackView(views: [languageField, raceField])
-        row1.orientation = .horizontal
-        row1.distribution = .fillEqually
-        row1.spacing = 4
-        row1.translatesAutoresizingMaskIntoConstraints = false
+        let row1 = makeStackView(
+            views: [languageField, raceField],
+            orientation: .horizontal,
+            distribution: .fillEqually,
+            spacing: 4)
 
-        let stackView = NSStackView(views: [row0, row1, addressField, educationField])
-        stackView.orientation = .vertical
-        stackView.alignment = .leading
-        stackView.distribution = .fill
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let stackView = makeStackView(
+            views: [row0, row1, addressField, educationField],
+            orientation: .vertical,
+            alignment: .leading,
+            spacing: 8)
 
         contentView.addSubview(stackView)
 

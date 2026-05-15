@@ -104,4 +104,25 @@ class ClientCardItem: NSCollectionViewItem {
             contentView.trailingAnchor.constraint(equalTo: outlineView.trailingAnchor, constant: -8)
         ])
     }
+
+    // Utility Methods
+    func makeStackView(
+        views: [NSView],
+        orientation: NSUserInterfaceLayoutOrientation,
+        alignment: NSLayoutConstraint.Attribute? = nil,
+        distribution: NSStackView.Distribution = .fill,
+        spacing: CGFloat
+    ) -> NSStackView {
+        let stackView = NSStackView(views: views)
+        stackView.orientation = orientation
+        stackView.distribution = distribution
+        stackView.spacing = spacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        if let alignment = alignment {
+            stackView.alignment = alignment
+        }
+
+        return stackView
+    }
 }

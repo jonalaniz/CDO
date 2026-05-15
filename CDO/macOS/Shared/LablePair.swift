@@ -41,15 +41,17 @@ final class LabelPairView: NSView {
             headerField.leadingAnchor.constraint(equalTo: leadingAnchor),
             headerField.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            contentField.topAnchor.constraint(equalTo: headerField.bottomAnchor, constant: 4),
+            contentField.topAnchor.constraint(equalTo: headerField.bottomAnchor, constant: 2),
             contentField.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentField.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentField.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 
-    func setContent(_ content: String?) {
+    func setContent(_ content: String?, header: String? = nil) {
         contentField.stringValue = content ?? ""
+
+        if let header = header { headerField.stringValue = header }
 
         headerField.textColor = contentField.stringValue == ""
         ? .secondaryLabelColor : .labelColor
@@ -97,9 +99,12 @@ final class LabelTextViewPair: NSView {
         ])
     }
 
-    func setContent(_ content: String?) {
+    func setContent(_ content: String?, header: String? = nil) {
         contentField.string = content ?? ""
 
+        if let header = header { headerField.stringValue = header }
+
+        // Empty fields have a greyed out header
         headerField.textColor = contentField.string == ""
         ? .secondaryLabelColor : .labelColor
     }

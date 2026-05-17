@@ -49,8 +49,8 @@ extension ClientManager: NSTableViewDataSource, NSTableViewDelegate {
     }
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let nameHeight = NSFont.preferredFont(forTextStyle: .headline).boundingRectForFont.height
-        let addressHeight = NSFont.preferredFont(forTextStyle: .body).boundingRectForFont.height
+        let nameHeight = NSFont.heightFor(preferredFont: .headline)
+        let addressHeight = NSFont.heightFor(preferredFont: .body)
         return nameHeight + (addressHeight * 2) + 20
     }
 

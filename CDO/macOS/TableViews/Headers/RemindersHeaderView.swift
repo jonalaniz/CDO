@@ -11,9 +11,7 @@ final class RemindersHeaderView: NSTableHeaderView {
     let headerLabel = NSTextField(labelWithString: "Reminders")
 
     init() {
-        let height = NSFont.preferredFont(
-            forTextStyle: .headline
-        ).boundingRectForFont.size.height
+        let height = NSFont.heightFor(preferredFont: .headline)
         super.init(frame: .init(x: 0, y: 0, width: 0, height: height * 2))
         setupUI()
     }

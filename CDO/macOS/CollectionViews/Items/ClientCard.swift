@@ -41,7 +41,7 @@ class ClientCardItem: NSCollectionViewItem {
         action: nil
     )
     let titleLabel = NSTextField(labelWithString: "Test Title Label")
-    let height = NSFont.preferredFont(forTextStyle: .title1).boundingRectForFont.height
+    let height = NSFont.heightFor(preferredFont: .title1)
 
     override func loadView() {
         layoutGlassView()

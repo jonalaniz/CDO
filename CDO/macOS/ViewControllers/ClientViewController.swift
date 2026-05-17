@@ -99,27 +99,20 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
             let unwrappedClient = client
         else { return NSCollectionViewItem() }
 
+        let item: ClientCardItem
+
         switch card {
-        case .personal:
-            let cell = PersonalInformationCollectionViewItem()
-            cell.titleLabel.stringValue = card.title
-            cell.configure(with: unwrappedClient)
-            return cell
-        case .contact:
-            let cell = ContactInformationItem()
-            cell.titleLabel.stringValue = card.title
-            cell.configure(with: unwrappedClient)
-            return cell
-        case .caseInfo:
-            let cell = CaseInformationItem()
-            cell.titleLabel.stringValue = card.title
-            cell.configure(with: unwrappedClient)
-            return cell
-        default:
-            let cell = ClientCardItem()
-            cell.titleLabel.stringValue = card.title
-            return cell
+        case .personal: item = PersonalInformationCollectionViewItem()
+        case .contact: item = ContactInformationItem()
+        case .caseInfo: item = CaseInformationItem()
+        case .conditions: item = ConditionsItem()
+        case .sas: item = ServiceAuthorizationsItem()
+        case .employmentProfile: item = EmploymentProfileItem()
+        default: item = ClientCardItem()
         }
 
+        item.titleLabel.stringValue = card.title
+        item.configure(with: unwrappedClient)
+        return item
     }
 }

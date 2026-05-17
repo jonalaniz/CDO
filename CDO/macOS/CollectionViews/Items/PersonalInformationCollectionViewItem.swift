@@ -47,7 +47,7 @@ final class PersonalInformationCollectionViewItem: ClientCardItem {
         ])
     }
 
-    func configure(with client: ClientDetail) {
+    override func configure(with client: ClientDetail) {
         dobField.setContent(client.formattedDob)
         dlField.setContent(client.driversLicense)
         ssnField.setContent(client.formattedSSN)

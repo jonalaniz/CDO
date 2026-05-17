@@ -27,4 +27,12 @@ struct SADetail: Codable {
     let counselorID: Int?
     let counselorName: String
     let secretraryName: String?
+
+    var formattedEndDate: String {
+        return "Valid till \(formatted(endDate))"
+    }
+
+    private func formatted(_ date: Date) -> String {
+        return date.formatted(date: .numeric, time: .omitted)
+    }
 }

@@ -67,7 +67,7 @@ final class ContactInformationItem: ClientCardItem {
         ])
     }
 
-    func configure(with client: ClientDetail) {
+    override func configure(with client: ClientDetail) {
         phone1Field.setContent(client.phone1, header: client.phone1Identity)
         phone2Field.setContent(client.phone2, header: client.phone2Identity)
         phone3Field.setContent(client.phone3, header: client.phone3Identity)

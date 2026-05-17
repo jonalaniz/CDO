@@ -33,6 +33,7 @@ enum ClientCard: Int, CaseIterable {
 
 class ClientCardItem: NSCollectionViewItem {
     let glassView = NSGlassEffectView()
+    let outlineView = NSView()
     let contentView = NSView()
     let button = NSButton(
         image: NSImage(systemSymbolName: "pencil", accessibilityDescription: "edit") ?? NSImage(),
@@ -46,6 +47,8 @@ class ClientCardItem: NSCollectionViewItem {
         layoutGlassView()
         constrainViews()
     }
+
+    func configure(with client: ClientDetail) {}
 
     private func layoutGlassView() {
         view = NSView()
@@ -65,7 +68,6 @@ class ClientCardItem: NSCollectionViewItem {
         button.borderShape = .circle
 
         // View for outline, embed the contentview inside it with padding
-        let outlineView = NSView()
         outlineView.wantsLayer = true
         outlineView.layer?.backgroundColor = .clear
         outlineView.layer?.cornerRadius = 4

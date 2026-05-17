@@ -50,7 +50,7 @@ final class CaseInformationItem: ClientCardItem {
         ])
     }
 
-    func configure(with client: ClientDetail) {
+    override func configure(with client: ClientDetail) {
         startDateField.setContent(client.formattedStartDate)
         caseIDField.setContent(client.caseID)
         caseLoadField.setContent(client.formattedCaseLoad)

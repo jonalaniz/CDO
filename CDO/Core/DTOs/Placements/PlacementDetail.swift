@@ -56,4 +56,13 @@ struct PlacementDetail: Codable {
     let supervisorEmail: String?
     let supervisorPhone: String?
     let website: String?
+
+    var formattedHireDate: String {
+        guard let date = hireDate else { return "" }
+        return "Placed on \(formatted(date))"
+    }
+
+    private func formatted(_ date: Date) -> String {
+        return date.formatted(date: .numeric, time: .omitted)
+    }
 }

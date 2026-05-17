@@ -1,5 +1,5 @@
 //
-//  ServiceAuthorizationsItem.swift
+//  ServiceAuthorizationItem.swift
 //  CDO
 //
 //  Created by Jon Alaniz on 5/15/26.
@@ -7,7 +7,7 @@
 
 import Cocoa
 
-final class ServiceAuthorizationsItem: ClientCardItem {
+final class ServiceAuthorizationItem: ClientCardItem {
     private let tableView = NSTableView()
     private var serviceAuthorizations = [SADetail]()
 
@@ -37,10 +37,11 @@ final class ServiceAuthorizationsItem: ClientCardItem {
     }
 }
 
-extension ServiceAuthorizationsItem: NSTableViewDataSource, NSTableViewDelegate {
+extension ServiceAuthorizationItem: NSTableViewDataSource, NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return ClientSACell.height
     }
+
     func numberOfRows(in tableView: NSTableView) -> Int {
         return serviceAuthorizations.count
     }

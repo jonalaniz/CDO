@@ -102,12 +102,13 @@ extension ClientViewController: NSCollectionViewDataSource, NSCollectionViewDele
         let item: ClientCardItem
 
         switch card {
-        case .personal: item = PersonalInformationCollectionViewItem()
+        case .personal: item = PersonalInformationItem()
         case .contact: item = ContactInformationItem()
         case .caseInfo: item = CaseInformationItem()
         case .conditions: item = ConditionsItem()
-        case .sas: item = ServiceAuthorizationsItem()
+        case .sas: item = ServiceAuthorizationItem()
         case .employmentProfile: item = EmploymentProfileItem()
+        case .placements: item = PlacementItem()
         default: item = ClientCardItem()
         }
 

@@ -7,7 +7,7 @@
 
 import Cocoa
 
-final class PersonalInformationCollectionViewItem: ClientCardItem {
+final class PersonalInformationItem: ClientCardItem {
     private let dobField = LabelPairView(header: "DOB")
     private let dlField = LabelPairView(header: "DL/ID")
     private let ssnField = LabelPairView(header: "SSN")
